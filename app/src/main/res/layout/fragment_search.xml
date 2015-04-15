@@ -1,0 +1,50 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.permoveo.apps.chefmate.SearchFragment"
+    android:clickable="true"
+    android:id="@+id/fragment_search_container">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <EditText
+            android:id="@+id/etSearchField"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true" />
+
+
+        <Button
+            android:id="@+id/bSearch"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="Search"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/etSearchField"></Button>
+
+
+        <Button
+            android:id="@+id/bClearSearch"
+            android:layout_below="@id/bSearch"
+            android:text="Clear Search"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+
+            android:layout_width="wrap_content"></Button>
+
+
+        <TextView
+            android:id="@+id/tvResult"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_below="@id/bClearSearch"></TextView>
+
+
+    </RelativeLayout>
+
+
+</FrameLayout>
