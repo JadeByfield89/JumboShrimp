@@ -1,5 +1,7 @@
 package com.permoveo.apps.jumboshrimp.model;
 
+import org.json.JSONObject;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -20,6 +22,8 @@ public class Recipe extends BaseItem implements Serializable{
         mIngredients = ingredients;
         mServingSize = servingSize;
         mDuration = duration;
+
+
     }
 
     public void setPhoto(Photo photo){
@@ -29,4 +33,7 @@ public class Recipe extends BaseItem implements Serializable{
     public Photo getPhoto(){
         return mPhoto;
     }
+
+
+
 }

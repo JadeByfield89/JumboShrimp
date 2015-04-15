@@ -11,18 +11,28 @@ import com.android.volley.toolbox.JsonObjectRequest;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.android.volley.toolbox.Volley;
 import com.permoveo.apps.jumboshrimp.application.CoreApplication;
 import com.permoveo.apps.jumboshrimp.constants.DataSource;
+import com.permoveo.apps.jumboshrimp.factory.ParserFactory;
 import com.permoveo.apps.jumboshrimp.model.BaseItem;
 import com.permoveo.apps.jumboshrimp.model.Recipe;
+import com.permoveo.apps.jumboshrimp.parser.BigOvenParser;
 
 /**
  * Created by byfieldj on 4/14/15.
+ * Each class that extends DataSourceProvider will need to call through to setDataSource() to specify
+ * its data source, so that model classes will know how to construct themselves based on which data source this is
+ *
+ * ie; BigOvenDataSourceProvider may need to construct its Recipe object slightly different from say
+ * a YummlyDataSourceProvider, since both APIs represent recipe data differently
  */
+
 
 
 //DataSourceProvider for interacting with the BigOven api
@@ -32,13 +42,15 @@ public class BigOvenDataSourceProvider extends DataSourceProvider {
     private static final String API_KEY = "dvx21GevXUl0UVtPVjgzs05tT9cfcd0Z";
     private static int API_CALLS_MADE = 0;
     private Context mContext;
-    private String RECIPE_ENDPOINT = "http://api.bigoven.com/recipes?" + API_KEY;
+    private String RECIPE_ENDPOINT = "http://api.bigoven.com/recipes?";
     private JSONObject mResult;
     private List<String> mUrlParams;
     private static final int RESULTS_PER_PAGE = 25;
     private int CURRENT_PAGE = 1;
     private boolean mSearchByTitle;
     private Recipe mRecipe;
+    List<Recipe> mRecipesList = new ArrayList<Recipe>();
+
 
 
     public BigOvenDataSourceProvider(Context context) {
@@ -48,10 +60,7 @@ public class BigOvenDataSourceProvider extends DataSourceProvider {
 
     }
 
-    @Override
-    public JSONObject loadDataFromNetwork() {
-        return null;
-    }
+
 
     //TODO: Take JSON that was returned from recipe search and construct a Recipe object out of it
     @Override
@@ -65,13 +74,14 @@ public class BigOvenDataSourceProvider extends DataSourceProvider {
 
 
     //TODO Refactor to return a list of Recipe objects instead of JsonObject
-    public Recipe searchForRecipe(List<String> searchTerms, boolean byTitle) {
+    public List<Recipe> searchForRecipe(ArrayList<String> searchTerms, boolean byTitle) {
 
         mUrlParams = searchTerms;
         mSearchByTitle = byTitle;
 
-        if (mUrlParams != null && !mUrlParams.isEmpty()) {
-            constructUrl(mUrlParams);
+
+        if (searchTerms != null && !searchTerms.isEmpty()) {
+            constructUrl(searchTerms);
         } else {
             throw new NullPointerException("Search query list must not be empty!");
         }
@@ -81,7 +91,7 @@ public class BigOvenDataSourceProvider extends DataSourceProvider {
             @Override
             public void onResponse(JSONObject response) {
 
-                mRecipe = (Recipe)parseObject(response);
+                mRecipesList = (List<Recipe>) parseObjectToList(response);
                 Log.d(TAG, "onResponse: Response -> " + response.toString());
             }
 
@@ -105,25 +115,29 @@ public class BigOvenDataSourceProvider extends DataSourceProvider {
                 return params;
             }
 
+
+
         };
 
-             CoreApplication.getInstance().addToRequestQueue(objectRequest);
+        //Add the request to our RequestQueue
+        CoreApplication.getInstance().addToRequestQueue(objectRequest);
 
 
-        return mRecipe;
+        return mRecipesList;
     }
 
 
     @Override
-    public void constructUrl(List<String> searchTerms) {
+    public void constructUrl(ArrayList<String> searchTerms) {
 
 
         //TODO: Make reusable
         //first, add our static params to the URL
         StringBuilder urlBuilder = new StringBuilder();
         urlBuilder.append(RECIPE_ENDPOINT);
+        urlBuilder.append("&api_key=" + API_KEY);
         urlBuilder.append("&pg=" + CURRENT_PAGE);
-        urlBuilder.append("&rpp" + RESULTS_PER_PAGE);
+        urlBuilder.append("&rpp=" + RESULTS_PER_PAGE);
 
 
         //If this is a search by recipe title, then the "any_kw" param is not needed, but the "title_kw" is
@@ -134,7 +148,7 @@ public class BigOvenDataSourceProvider extends DataSourceProvider {
             urlBuilder.append("&any_kw=");
             //Then, iterate our list or search terms the user has entered and append those as well
             for (String term : searchTerms) {
-                urlBuilder.append("," + term);
+                urlBuilder.append(term + ",");
             }
 
 
@@ -147,4 +161,18 @@ public class BigOvenDataSourceProvider extends DataSourceProvider {
     }
 
 
+
+    public List<Recipe> parseObjectToList(JSONObject object) {
+        List<Recipe> recipes = new ArrayList<Recipe>();
+
+        for(int i =0; object.length() > 0; i++){
+
+
+            BigOvenParser parser = (BigOvenParser) ParserFactory.getParser(getDataSource());
+            //parser.parseRecipe();
+        }
+
+
+        return recipes;
+    }
 }

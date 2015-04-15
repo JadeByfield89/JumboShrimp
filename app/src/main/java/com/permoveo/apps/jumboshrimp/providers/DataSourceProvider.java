@@ -2,6 +2,7 @@ package com.permoveo.apps.jumboshrimp.providers;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.permoveo.apps.jumboshrimp.constants.DataSource;
@@ -32,42 +33,36 @@ public abstract class DataSourceProvider {
     public List<String> mStringSearchTerms;
     public List<Integer> mIntegerSearchTerms;
 
-    public void setApiKey(String key){
+    public void setApiKey(String key) {
         API_KEY = key;
     }
 
-    public String getApiKey(){
+    public String getApiKey() {
         return API_KEY;
     }
 
 
-    //TODO: Remove this method
-    public abstract JSONObject loadDataFromNetwork();
-
-    public void setDataSource(DataSource source){
+    public void setDataSource(DataSource source) {
         mDataSource = source;
     }
 
-    public DataSource getDataSource(){
+    public DataSource getDataSource() {
         return mDataSource;
     }
 
 
     public abstract BaseItem parseObject(JSONObject object);
 
-    public abstract void constructUrl(List<String> urlParams);
 
-    public void setApiCallLimit(int limit){
+    public abstract void constructUrl(ArrayList<String> urlParams);
+
+    public void setApiCallLimit(int limit) {
         API_CALL_LIMIT = limit;
     }
 
-    public int getApiCallLimit(){
+    public int getApiCallLimit() {
         return API_CALL_LIMIT;
     }
-
-
-
-
 
 
 }

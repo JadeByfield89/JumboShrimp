@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 
 import com.permoveo.apps.jumboshrimp.R;
 
@@ -25,7 +26,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener{
 private EditText mSearchField;
 private Button mSearchButton;
 private Button mClearSearchButton;
-private List<String> mSearchTerms = new ArrayList<String>();
+private ArrayList<String> mSearchTerms = new ArrayList<String>();
 
 
     public SearchFragment() {
@@ -43,13 +44,15 @@ private List<String> mSearchTerms = new ArrayList<String>();
                              Bundle savedInstanceState) {
 
         View v = inflater.inflate(R.layout.fragment_search, container, false);
+        RelativeLayout layout = (RelativeLayout) v.findViewById(R.id.rlContainer);
 
-        mSearchField = (EditText) v.findViewById(R.id.etSearchField);
+        mSearchField = (EditText) layout.findViewById(R.id.etSearchField);
         mSearchButton = (Button) v.findViewById(R.id.bSearch);
         mClearSearchButton = (Button) v.findViewById(R.id.bClearSearch);
 
         mSearchButton.setOnClickListener(this);
         mClearSearchButton.setOnClickListener(this);
+        mSearchField.setOnClickListener(this);
 
         // Inflate the layout for this fragment
         return v;
@@ -64,7 +67,11 @@ private List<String> mSearchTerms = new ArrayList<String>();
 
             case R.id.bSearch:
                 extractSearchTerms();
-                performSearch(mSearchTerms);
+                //performSearch(mSearchTerms);
+                break;
+
+            case R.id.etSearchField:
+                Log.d("SearchFragment", "search field touched");
                 break;
         }
     }
@@ -73,13 +80,16 @@ private List<String> mSearchTerms = new ArrayList<String>();
 
         //Extracts individual search terms from the EditText field and composes a list out of them
         String queryEntered = mSearchField.getText().toString();
+        Log.d("SearchFragment", "Query -> " + queryEntered);
         mSearchTerms.add(queryEntered);
+        Log.d("SearchFragment", "List size -> " + mSearchTerms.size());
+
+        performSearch(mSearchTerms);
     }
 
-    private void performSearch(List<String> terms){
+    private void performSearch(ArrayList<String> terms){
         BigOvenDataSourceProvider provider = new BigOvenDataSourceProvider(getActivity());
-       JSONObject json =  provider.searchForRecipe(terms, false);
+        provider.searchForRecipe(terms, false);
 
-       Log.d("SearchFragment", "Data returned -> " + json.toString());
     }
 }
