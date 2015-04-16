@@ -13,9 +13,19 @@ public class Recipe extends BaseItem implements Serializable{
 
     private List<Ingredient> mIngredients;
     private String mRecipeName;
+    private String mPhotoUrl;
     private int mServingSize;
     private int mDuration;
     private Photo mPhoto;
+
+
+
+    public Recipe(String name, String photoUrl){
+        mRecipeName = name;
+        mPhotoUrl = photoUrl;
+
+
+    }
 
     public Recipe(String name, List<Ingredient> ingredients, int servingSize, int duration){
         mRecipeName = name;
@@ -24,6 +34,22 @@ public class Recipe extends BaseItem implements Serializable{
         mDuration = duration;
 
 
+    }
+
+    public void setRecipeName(String name){
+        mRecipeName = name;
+    }
+
+    public String getRecipeName(){
+        return mRecipeName;
+    }
+
+    public void setRecipePhotoUrl(String url){
+        mPhotoUrl = url;
+    }
+
+    public String getRecipePhotoUrl(){
+        return mPhotoUrl;
     }
 
     public void setPhoto(Photo photo){

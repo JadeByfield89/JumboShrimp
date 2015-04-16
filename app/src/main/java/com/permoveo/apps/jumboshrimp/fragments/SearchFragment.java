@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.permoveo.apps.jumboshrimp.R;
 
@@ -18,15 +19,18 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.permoveo.apps.jumboshrimp.model.Recipe;
 import com.permoveo.apps.jumboshrimp.providers.BigOvenDataSourceProvider;
+import com.permoveo.apps.jumboshrimp.providers.DataSourceProvider;
 
 
-public class SearchFragment extends Fragment implements View.OnClickListener{
+public class SearchFragment extends Fragment implements View.OnClickListener, DataSourceProvider.OnApiRequestCompleteListener{
 
 private EditText mSearchField;
 private Button mSearchButton;
 private Button mClearSearchButton;
 private ArrayList<String> mSearchTerms = new ArrayList<String>();
+
 
 
     public SearchFragment() {
@@ -67,7 +71,7 @@ private ArrayList<String> mSearchTerms = new ArrayList<String>();
 
             case R.id.bSearch:
                 extractSearchTerms();
-                //performSearch(mSearchTerms);
+                performSearch(mSearchTerms);
                 break;
 
             case R.id.etSearchField:
@@ -84,12 +88,27 @@ private ArrayList<String> mSearchTerms = new ArrayList<String>();
         mSearchTerms.add(queryEntered);
         Log.d("SearchFragment", "List size -> " + mSearchTerms.size());
 
-        performSearch(mSearchTerms);
     }
 
     private void performSearch(ArrayList<String> terms){
         BigOvenDataSourceProvider provider = new BigOvenDataSourceProvider(getActivity());
-        provider.searchForRecipe(terms, false);
+        provider.setListener(this);
+        provider.searchForRecipes(terms, false);
+
+
+
+    }
+
+
+    @Override
+    public void onApiResponseSuccess(JSONObject object) {
+
+        Log.d("SearchFragment", "API RESPONSE! -> " + object.toString());
+        Toast.makeText(getActivity(), "API RESPONSE", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onError() {
 
     }
 }

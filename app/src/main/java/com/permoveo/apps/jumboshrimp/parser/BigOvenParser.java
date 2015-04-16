@@ -1,8 +1,13 @@
 package com.permoveo.apps.jumboshrimp.parser;
 
+import android.util.Log;
+
+import com.permoveo.apps.jumboshrimp.model.Ingredient;
+import com.permoveo.apps.jumboshrimp.model.Photo;
 import com.permoveo.apps.jumboshrimp.model.Recipe;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -13,21 +18,47 @@ import org.json.JSONObject;
 public class BigOvenParser implements  Parser {
 
 
+    public static final String JSON_ARRAY_RESULTS = "Results";
+    public static final String JSON_OBJECT_TITLE  = "Title";
+    public static final String JSON_OBJECT_IMAGE_URL = "ImageURL120";
+    private static final String TAG = "BigOvenParser";
 
-    public Recipe parseRecipe(JSONObject obj){
+    @Override
+    public Recipe parseRecipe(JSONObject object){
         Recipe recipe = null;
+
+
+               try {
+                   String recipeTitle = object.getString(JSON_OBJECT_TITLE);
+                   String recipeImageUrl = object.getString(JSON_OBJECT_IMAGE_URL);
+
+
+                   recipe = new Recipe(recipeTitle, recipeImageUrl);
+               }catch(JSONException e){
+                   e.printStackTrace();
+               }
+
+
 
 
         return recipe;
     }
+
     @Override
-    public void construct(JSONObject obj) {
-
-
+    public Ingredient parseIngredient(JSONObject object) {
+        return null;
     }
 
     @Override
-    public void construct(JSONArray array) {
-
+    public Photo parsePhoto(JSONObject object) {
+        return null;
     }
+
+
+    //parseIngreditent
+
+
+
+
+
 }

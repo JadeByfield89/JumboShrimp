@@ -9,6 +9,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -25,14 +27,10 @@ import com.permoveo.apps.jumboshrimp.model.Recipe;
 import com.permoveo.apps.jumboshrimp.parser.BigOvenParser;
 
 /**
- * Created by byfieldj on 4/14/15.
- * Each class that extends DataSourceProvider will need to call through to setDataSource() to specify
- * its data source, so that model classes will know how to construct themselves based on which data source this is
- *
- * ie; BigOvenDataSourceProvider may need to construct its Recipe object slightly different from say
- * a YummlyDataSourceProvider, since both APIs represent recipe data differently
+ * This class specifies how exactly to interact with the BigOven recipe API
+ * It details BigOvens API Keys, endpoints, rate limits, pagination info and
+ * any and all other info about that specific data source should go here.
  */
-
 
 
 //DataSourceProvider for interacting with the BigOven api
@@ -42,14 +40,18 @@ public class BigOvenDataSourceProvider extends DataSourceProvider {
     private static final String API_KEY = "dvx21GevXUl0UVtPVjgzs05tT9cfcd0Z";
     private static int API_CALLS_MADE = 0;
     private Context mContext;
-    private String RECIPE_ENDPOINT = "http://api.bigoven.com/recipes?";
+
+    //Important to distinguish recipe/recipes here
+    private String RECIPES_ENDPOINT = "http://api.bigoven.com/recipes?";
+    private String RECIPE_ENDPOINT = "http://api.bigoven.com/recipe?";
+
     private JSONObject mResult;
     private List<String> mUrlParams;
     private static final int RESULTS_PER_PAGE = 25;
     private int CURRENT_PAGE = 1;
     private boolean mSearchByTitle;
     private Recipe mRecipe;
-    List<Recipe> mRecipesList = new ArrayList<Recipe>();
+    private List<Recipe> mRecipesList;
 
 
 
@@ -61,20 +63,7 @@ public class BigOvenDataSourceProvider extends DataSourceProvider {
     }
 
 
-
-    //TODO: Take JSON that was returned from recipe search and construct a Recipe object out of it
-    @Override
-    public BaseItem parseObject(JSONObject object) {
-
-        Recipe  recipeItem = null;
-
-
-        return recipeItem;
-    }
-
-
-    //TODO Refactor to return a list of Recipe objects instead of JsonObject
-    public List<Recipe> searchForRecipe(ArrayList<String> searchTerms, boolean byTitle) {
+    public void searchForRecipes(ArrayList<String> searchTerms, boolean byTitle) {
 
         mUrlParams = searchTerms;
         mSearchByTitle = byTitle;
@@ -87,12 +76,13 @@ public class BigOvenDataSourceProvider extends DataSourceProvider {
         }
 
 
-        JsonObjectRequest objectRequest = new JsonObjectRequest(Request.Method.GET, RECIPE_ENDPOINT, null, new Response.Listener<JSONObject>() {
+        JsonObjectRequest objectRequest = new JsonObjectRequest(Request.Method.GET, RECIPES_ENDPOINT, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
 
-                mRecipesList = (List<Recipe>) parseObjectToList(response);
+                parseObjectToList(response);
                 Log.d(TAG, "onResponse: Response -> " + response.toString());
+                mListener.onApiResponseSuccess();
             }
 
 
@@ -116,14 +106,12 @@ public class BigOvenDataSourceProvider extends DataSourceProvider {
             }
 
 
-
         };
 
         //Add the request to our RequestQueue
         CoreApplication.getInstance().addToRequestQueue(objectRequest);
 
 
-        return mRecipesList;
     }
 
 
@@ -132,9 +120,10 @@ public class BigOvenDataSourceProvider extends DataSourceProvider {
 
 
         //TODO: Make reusable
+        //via a URLManager class that will execute this same behavior for all DataSourceProviders
         //first, add our static params to the URL
         StringBuilder urlBuilder = new StringBuilder();
-        urlBuilder.append(RECIPE_ENDPOINT);
+        urlBuilder.append(RECIPES_ENDPOINT);
         urlBuilder.append("&api_key=" + API_KEY);
         urlBuilder.append("&pg=" + CURRENT_PAGE);
         urlBuilder.append("&rpp=" + RESULTS_PER_PAGE);
@@ -154,25 +143,45 @@ public class BigOvenDataSourceProvider extends DataSourceProvider {
 
         }
 
-        RECIPE_ENDPOINT = urlBuilder.toString();
-        Log.d(TAG, "constructUrl, Search URL -> " + RECIPE_ENDPOINT);
+        RECIPES_ENDPOINT = urlBuilder.toString();
+        Log.d(TAG, "constructUrl, Search URL -> " + RECIPES_ENDPOINT);
 
 
     }
 
 
+    public void parseObjectToList(JSONObject object) {
 
-    public List<Recipe> parseObjectToList(JSONObject object) {
-        List<Recipe> recipes = new ArrayList<Recipe>();
+        mRecipesList = new ArrayList<Recipe>();
+        try {
+            JSONArray array = object.getJSONArray(BigOvenParser.JSON_ARRAY_RESULTS);
 
-        for(int i =0; object.length() > 0; i++){
+
+            for (int i = 0; i < RESULTS_PER_PAGE; i++) {
+                JSONObject obj = array.getJSONObject(i);
+
+                BigOvenParser parser = (BigOvenParser) ParserFactory.getParser(getDataSource());
+                Recipe recipe = parser.parseRecipe(obj);
+                mRecipesList.add(recipe);
+
+                Log.d(TAG, "Recipes list size -> " + mRecipesList.size());
+                Log.d(TAG, "Recipe name -> " + mRecipesList.get(i).getRecipeName());
+                Log.d(TAG, "Recipe photo url -> " + mRecipesList.get(i).getRecipePhotoUrl());
 
 
-            BigOvenParser parser = (BigOvenParser) ParserFactory.getParser(getDataSource());
-            //parser.parseRecipe();
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
 
-
-        return recipes;
     }
+
+
+    public List<Recipe> getRecipes() {
+
+        return mRecipesList;
+    }
+
+
 }

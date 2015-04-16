@@ -1,5 +1,10 @@
 package com.permoveo.apps.jumboshrimp.parser;
 
+import com.permoveo.apps.jumboshrimp.model.GroceryItem;
+import com.permoveo.apps.jumboshrimp.model.Ingredient;
+import com.permoveo.apps.jumboshrimp.model.Photo;
+import com.permoveo.apps.jumboshrimp.model.Recipe;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -9,7 +14,10 @@ import org.json.JSONObject;
 public interface Parser {
 
 
-    public abstract void construct(JSONObject obj);
+    public Recipe parseRecipe(JSONObject object);
 
-    public abstract void construct(JSONArray array);
+    public Ingredient parseIngredient(JSONObject object);
+
+    public Photo parsePhoto(JSONObject object);
+
 }
