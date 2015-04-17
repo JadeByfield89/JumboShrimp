@@ -40,11 +40,27 @@
             android:layout_width="wrap_content"></Button>
 
 
-        <TextView
-            android:id="@+id/tvResult"
+        <Button
+            android:id="@+id/bVoiceCommand"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:layout_below="@id/bClearSearch"></TextView>
+            android:layout_below="@id/bClearSearch"
+            android:layout_centerHorizontal="true"
+            android:text="@string/voice_command">
+
+
+        </Button>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/bVoiceCommand"
+            android:id="@+id/tvResultText"
+            android:text="Result"
+            android:textSize="60sp"
+            android:layout_marginTop="30dp" />
 
 
     </RelativeLayout>
