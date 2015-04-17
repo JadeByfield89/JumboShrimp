@@ -1,6 +1,7 @@
 package com.permoveo.apps.jumboshrimp.fragments;
 
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -19,21 +20,23 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.permoveo.apps.jumboshrimp.listeners.OnApiRequestCompletedListener;
 import com.permoveo.apps.jumboshrimp.model.Recipe;
 import com.permoveo.apps.jumboshrimp.providers.BigOvenDataSourceProvider;
 import com.permoveo.apps.jumboshrimp.providers.DataSourceProvider;
 
 
-public class SearchFragment extends Fragment implements View.OnClickListener, DataSourceProvider.OnApiRequestCompleteListener{
+public class RecipeSearchFragment extends Fragment implements View.OnClickListener, OnApiRequestCompletedListener {
 
-private EditText mSearchField;
-private Button mSearchButton;
-private Button mClearSearchButton;
-private ArrayList<String> mSearchTerms = new ArrayList<String>();
+    private EditText mSearchField;
+    private Button mSearchButton;
+    private Button mClearSearchButton;
+    private ArrayList<String> mSearchTerms = new ArrayList<String>();
+    private onRecipesLoadedListener mListener;
+    BigOvenDataSourceProvider mProvider;
 
 
-
-    public SearchFragment() {
+    public RecipeSearchFragment() {
         // Required empty public constructor
     }
 
@@ -41,6 +44,18 @@ private ArrayList<String> mSearchTerms = new ArrayList<String>();
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        try{
+            mListener = (onRecipesLoadedListener) activity;
+        }catch(ClassCastException e){
+            Log.d("RecipeSearchFragment", "Activity must implement onRecipesLoadedListener!");
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -64,10 +79,10 @@ private ArrayList<String> mSearchTerms = new ArrayList<String>();
 
     @Override
     public void onClick(View v) {
-        switch(v.getId()){
+        switch (v.getId()) {
             case R.id.bClearSearch:
 
-               break;
+                break;
 
             case R.id.bSearch:
                 extractSearchTerms();
@@ -80,7 +95,7 @@ private ArrayList<String> mSearchTerms = new ArrayList<String>();
         }
     }
 
-    private void extractSearchTerms(){
+    private void extractSearchTerms() {
 
         //Extracts individual search terms from the EditText field and composes a list out of them
         String queryEntered = mSearchField.getText().toString();
@@ -90,25 +105,31 @@ private ArrayList<String> mSearchTerms = new ArrayList<String>();
 
     }
 
-    private void performSearch(ArrayList<String> terms){
-        BigOvenDataSourceProvider provider = new BigOvenDataSourceProvider(getActivity());
-        provider.setListener(this);
-        provider.searchForRecipes(terms, false);
+    private void performSearch(ArrayList<String> terms) {
+        mProvider = new BigOvenDataSourceProvider(getActivity());
+        mProvider.setListener(this);
+        mProvider.searchForRecipes(terms, false);
 
 
 
     }
 
+    public interface onRecipesLoadedListener{
+        public abstract void onRecipesLoaded(List<Recipe> recipes);
+    }
+
 
     @Override
-    public void onApiResponseSuccess(JSONObject object) {
+    public void onApiRequestSuccess() {
 
-        Log.d("SearchFragment", "API RESPONSE! -> " + object.toString());
+        //Log.d("SearchFragment", "API RESPONSE! -> " + object.toString());
         Toast.makeText(getActivity(), "API RESPONSE", Toast.LENGTH_SHORT).show();
+
+        mListener.onRecipesLoaded(mProvider.getRecipes());
     }
 
     @Override
-    public void onError() {
+    public void onApiRequestError() {
 
     }
 }

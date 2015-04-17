@@ -1,7 +1,6 @@
 package com.permoveo.apps.jumboshrimp.activities;
 
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -9,15 +8,19 @@ import android.util.Log;
 
 import com.permoveo.apps.jumboshrimp.R;
 
-import com.permoveo.apps.jumboshrimp.fragments.SearchFragment;
+import com.permoveo.apps.jumboshrimp.fragments.RecipeSearchFragment;
+import com.permoveo.apps.jumboshrimp.fragments.RecipeSearchResultsFragment;
+import com.permoveo.apps.jumboshrimp.model.Recipe;
+
+import java.util.List;
 
 /**
  * Created by byfieldj on 4/14/15.
  */
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends FragmentActivity implements RecipeSearchFragment.onRecipesLoadedListener {
 
 
-   private SearchFragment mSearchFragment;
+   private RecipeSearchFragment mRecipeSearchFragment;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -25,10 +28,10 @@ public class MainActivity extends FragmentActivity {
         setContentView(R.layout.activity_main);
 
 
-        mSearchFragment = new SearchFragment();
+        mRecipeSearchFragment = new RecipeSearchFragment();
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add(R.id.activity_main_container, mSearchFragment).commit();
+        fragmentTransaction.add(R.id.activity_main_container, mRecipeSearchFragment).commit();
 
         Log.d("MainActivity", "onCreate");
 
@@ -39,5 +42,15 @@ public class MainActivity extends FragmentActivity {
 
     }
 
+    @Override
+    public void onRecipesLoaded(List<Recipe> recipes) {
+        Log.d("MainActivity", "onRecipesLoaded");
 
+        RecipeSearchResultsFragment fragment = new RecipeSearchResultsFragment();
+        fragment.setResults(recipes);
+
+        FragmentManager manager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = manager.beginTransaction();
+        fragmentTransaction.replace(R.id.activity_main_container, fragment).addToBackStack("results").commit();
+    }
 }

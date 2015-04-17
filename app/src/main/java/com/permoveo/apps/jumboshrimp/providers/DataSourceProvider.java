@@ -39,9 +39,10 @@ public abstract class DataSourceProvider {
     public OnApiRequestCompletedListener mListener;
 
 
-    public void setListener(OnApiRequestCompletedListener listener){
+    public void setListener(OnApiRequestCompletedListener listener) {
         mListener = listener;
     }
+
     public void setApiKey(String key) {
         API_KEY = key;
     }
@@ -58,8 +59,6 @@ public abstract class DataSourceProvider {
     public DataSource getDataSource() {
         return mDataSource;
     }
-
-
 
 
     public abstract void constructUrl(ArrayList<String> urlParams);

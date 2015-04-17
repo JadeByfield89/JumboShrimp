@@ -10,10 +10,8 @@ public interface OnApiRequestCompletedListener {
     public abstract void onApiRequestError();
 
 
-    //Once the api request has completed
-    //We need to ensure that we are saving
 
-    //they keys in the appropriate columns, or they will get lost in translation
+
 
 }
 

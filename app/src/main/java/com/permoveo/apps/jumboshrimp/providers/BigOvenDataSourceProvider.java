@@ -82,7 +82,7 @@ public class BigOvenDataSourceProvider extends DataSourceProvider {
 
                 parseObjectToList(response);
                 Log.d(TAG, "onResponse: Response -> " + response.toString());
-                mListener.onApiResponseSuccess();
+                mListener.onApiRequestSuccess();
             }
 
 
@@ -92,6 +92,7 @@ public class BigOvenDataSourceProvider extends DataSourceProvider {
             public void onErrorResponse(VolleyError error) {
 
                 Log.d(TAG, "onErrorResponse: " + error.getMessage());
+                mListener.onApiRequestError();
             }
 
 
