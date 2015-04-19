@@ -2,8 +2,11 @@ package com.permoveo.apps.jumboshrimp.fragments;
 
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
+import android.speech.SpeechRecognizer;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -28,12 +31,8 @@ import com.permoveo.apps.jumboshrimp.listeners.OnApiRequestCompletedListener;
 import com.permoveo.apps.jumboshrimp.model.Recipe;
 import com.permoveo.apps.jumboshrimp.providers.BigOvenDataSourceProvider;
 import com.permoveo.apps.jumboshrimp.providers.DataSourceProvider;
+import android.speech.RecognitionListener;
 
-import edu.cmu.pocketsphinx.Assets;
-import edu.cmu.pocketsphinx.Hypothesis;
-import edu.cmu.pocketsphinx.RecognitionListener;
-import edu.cmu.pocketsphinx.SpeechRecognizer;
-import static edu.cmu.pocketsphinx.SpeechRecognizerSetup.defaultSetup;
 
 
 
@@ -49,8 +48,6 @@ public class RecipeSearchFragment extends Fragment implements View.OnClickListen
     BigOvenDataSourceProvider mProvider;
     private boolean mVoiceMode = false;
     private SpeechRecognizer mRecognizer;
-    private static final String KWS_SEARCH = "";
-    private static final String KEYPHRASE = "";
 
 
     public RecipeSearchFragment() {
@@ -67,7 +64,15 @@ public class RecipeSearchFragment extends Fragment implements View.OnClickListen
     public void onDestroy() {
         super.onDestroy();
         mRecognizer.cancel();
-        mRecognizer.shutdown();
+        mRecognizer.destroy();
+
+
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mRecognizer.stopListening();
     }
 
     @Override
@@ -75,10 +80,9 @@ public class RecipeSearchFragment extends Fragment implements View.OnClickListen
         super.onAttach(activity);
 
 
-
-        try{
+        try {
             mListener = (onRecipesLoadedListener) activity;
-        }catch(ClassCastException e){
+        } catch (ClassCastException e) {
             Log.d("RecipeSearchFragment", "Activity must implement onRecipesLoadedListener!");
             e.printStackTrace();
         }
@@ -94,14 +98,18 @@ public class RecipeSearchFragment extends Fragment implements View.OnClickListen
         mSearchField = (EditText) layout.findViewById(R.id.etSearchField);
         mSearchButton = (Button) v.findViewById(R.id.bSearch);
         mClearSearchButton = (Button) v.findViewById(R.id.bClearSearch);
-        mVoiceCommand = (Button)v.findViewById(R.id.bVoiceCommand);
-        mResultText = (TextView)v.findViewById(R.id.tvResultText);
+        mVoiceCommand = (Button) v.findViewById(R.id.bVoiceCommand);
+        mResultText = (TextView) v.findViewById(R.id.tvResultText);
         mResultText.setVisibility(View.INVISIBLE);
 
         mSearchButton.setOnClickListener(this);
         mClearSearchButton.setOnClickListener(this);
         mSearchField.setOnClickListener(this);
         mVoiceCommand.setOnClickListener(this);
+
+
+        mRecognizer = SpeechRecognizer.createSpeechRecognizer(getActivity());
+        mRecognizer.setRecognitionListener(this);
 
         // Inflate the layout for this fragment
         return v;
@@ -125,13 +133,11 @@ public class RecipeSearchFragment extends Fragment implements View.OnClickListen
                 break;
 
             case R.id.bVoiceCommand:
-                if(!mVoiceMode){
+                if (!mVoiceMode) {
                     mVoiceMode = true;
                     mVoiceCommand.setText("Listening...");
                     startSpeechRecognizer();
-                }
-
-                else{
+                } else {
                     mVoiceMode = false;
                     mVoiceCommand.setText("VoiceCommand");
                 }
@@ -140,8 +146,16 @@ public class RecipeSearchFragment extends Fragment implements View.OnClickListen
     }
 
 
-    private void startSpeechRecognizer(){
-        new RecognizerTask().execute();
+    private void startSpeechRecognizer() {
+        {
+            Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+            intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+            intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE,"voice.recognition.test");
+
+            intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS,5);
+            mRecognizer.startListening(intent);
+            Log.i("111111","11111111");
+        }
     }
 
     private void extractSearchTerms() {
@@ -160,10 +174,9 @@ public class RecipeSearchFragment extends Fragment implements View.OnClickListen
         mProvider.searchForRecipes(terms, false);
 
 
-
     }
 
-    public interface onRecipesLoadedListener{
+    public interface onRecipesLoadedListener {
         public abstract void onRecipesLoaded(List<Recipe> recipes);
     }
 
@@ -183,111 +196,65 @@ public class RecipeSearchFragment extends Fragment implements View.OnClickListen
     }
 
 
-    private class RecognizerTask extends AsyncTask<Void, Void, Void>{
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            try {
-                Assets assets = new Assets(getActivity());
-                File assetDir = assets.syncAssets();
-                setupRecognizer(assetDir);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-        }
-    }
-
-    private void setupRecognizer(File assetsDir) throws IOException {
-        // The recognizer can be configured to perform multiple searches
-        // of different kind and switch between them
-        Log.d("RecipeSearchFragment", "setupRecognizer");
-        mRecognizer = defaultSetup()
-                .setAcousticModel(new File(assetsDir, "en-us-ptm"))
-                .setDictionary(new File(assetsDir, "cmudict-en-us.dict"))
-
-                        // To disable logging of raw audio comment out this call (takes a lot of space on the device)
-                .setRawLogDir(assetsDir)
-
-                        // Threshold to tune for keyphrase to balance between false alarms and misses
-                .setKeywordThreshold(1e-45f)
-
-                        // Use context-independent phonetic search, context-dependent is too slow for mobile
-                .setBoolean("-allphone_ci", true)
-
-                .getRecognizer();
-        mRecognizer.addListener(this);
-
-        /** In your application you might not need to add all those searches.
-         * They are added here for demonstration. You can leave just one.
-         */
-
-        // Create keyword-activation search.
-        //mRecognizer.addKeyphraseSearch(KWS_SEARCH, KEYPHRASE);
-        mRecognizer.addKeywordSearch(KWS_SEARCH, new File(assetsDir, "cmudict-en-us.dict"));
-
-        //mRecognizer.addGrammarSearch("be", new File(assetsDir, "digits.gram"));
-        mRecognizer.startListening("be");
+    @Override
+    public void onReadyForSpeech(Bundle params) {
 
     }
-
 
     @Override
     public void onBeginningOfSpeech() {
 
-        //Toast.makeText(getActivity(), "Speaking", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onRmsChanged(float rmsdB) {
+
+    }
+
+    @Override
+    public void onBufferReceived(byte[] buffer) {
+
     }
 
     @Override
     public void onEndOfSpeech() {
-        //Toast.makeText(getActivity(), "Stopped Speaking", Toast.LENGTH_SHORT).show();
 
     }
 
     @Override
-    public void onPartialResult(Hypothesis hypothesis) {
-        Log.d("RecipeSearchFragment", "onPartialResult");
-        mResultText.setVisibility(View.VISIBLE);
+    public void onError(int error) {
 
-        if(hypothesis != null) {
-            mResultText.setVisibility(View.VISIBLE);
-            mResultText.setText(hypothesis.getHypstr());
+    }
 
+    @Override
+    public void onResults(Bundle results) {
 
-            mSearchField.setText(hypothesis.getHypstr());
-
-
-            mSearchTerms.add(hypothesis.getHypstr());
-            performSearch(mSearchTerms);
-
-            mVoiceMode = false;
-            mVoiceCommand.setText("Voice Command");
-
-            mRecognizer.stop();
-
-            Log.d("RecipeSearchFragment", "onResult -> Result -> " + hypothesis.getHypstr());
+        String str = new String();
+        Log.d("RecipeSearchFragment", "onResults " + results);
+        ArrayList<String> data = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+        for (int i = 0; i < data.size(); i++)
+        {
+            Log.d("RecipeSearchFragment", "result " + data.get(i));
+            str += data.get(i);
         }
+        mResultText.setVisibility(View.VISIBLE);
+        mResultText.setText(data.get(0));
+        mSearchField.setText(data.get(0));
+
+        mSearchTerms.add(data.get(0));
+        performSearch(mSearchTerms);
+
+
 
     }
 
     @Override
-    public void onResult(Hypothesis hypothesis) {
-
-
-    }
-
-    @Override
-    public void onError(Exception e) {
+    public void onPartialResults(Bundle partialResults) {
 
     }
 
     @Override
-    public void onTimeout() {
+    public void onEvent(int eventType, Bundle params) {
 
     }
 }
