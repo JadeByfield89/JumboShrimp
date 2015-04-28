@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +28,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.permoveo.apps.jumboshrimp.activities.ActivityBarcodeScan;
 import com.permoveo.apps.jumboshrimp.listeners.OnApiRequestCompletedListener;
 import com.permoveo.apps.jumboshrimp.model.Recipe;
 import com.permoveo.apps.jumboshrimp.providers.BigOvenDataSourceProvider;
@@ -53,6 +55,12 @@ public class RecipeSearchFragment extends Fragment implements View.OnClickListen
     Button mVoiceCommand;
     @InjectView(R.id.tvResultText)
     TextView mResultText;
+
+    @InjectView(R.id.bBarCodeScan)
+    Button mScanBarcode;
+
+
+
 
     private ArrayList<String> mSearchTerms = new ArrayList<String>();
     private onRecipesLoadedListener mListener;
@@ -148,6 +156,19 @@ public class RecipeSearchFragment extends Fragment implements View.OnClickListen
             mVoiceMode = false;
             mVoiceCommand.setText("Voice Command");
         }
+    }
+
+    @OnClick(R.id.bBarCodeScan)
+    public void scanBarcode(){
+
+        FragmentManager manager = getChildFragmentManager();
+        BarcodeScannerFragment fragment = new BarcodeScannerFragment();
+        manager.beginTransaction().add(fragment, "barcode").addToBackStack("barcode").commit();
+
+        //Intent scan = new Intent(getActivity(), ActivityBarcodeScan.class);
+        //startActivity(scan);
+
+
     }
 
 

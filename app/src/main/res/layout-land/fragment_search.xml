@@ -52,11 +52,20 @@
         </Button>
 
 
+        <Button
+            android:id="@+id/bBarCodeScan"
+            android:layout_below="@id/bVoiceCommand"
+            android:layout_centerHorizontal="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/scan_barcode"/>
+
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:layout_below="@id/bVoiceCommand"
+            android:layout_below="@id/bBarCodeScan"
             android:id="@+id/tvResultText"
             android:text="Result"
             android:textSize="60sp"
