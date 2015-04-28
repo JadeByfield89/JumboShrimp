@@ -33,11 +33,12 @@ dependencies {
     compile 'com.android.support:appcompat-v7:22.0.0'
     compile 'com.mcxiaoke.volley:library:1.0.6'
     compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'com.jakewharton:butterknife:5.1.1'
+    compile 'oauth.signpost:signpost-core:1.2.1.2'
+    compile 'oauth.signpost:signpost-commonshttp4:1.2.1.2'
 }
 
-ant.importBuild 'assets.xml'
-preBuild.dependsOn(list, checksum)
-clean.dependsOn(clean_assets)
+
 
 
 

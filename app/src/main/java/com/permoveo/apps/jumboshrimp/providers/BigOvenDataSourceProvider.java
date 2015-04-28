@@ -63,7 +63,7 @@ public class BigOvenDataSourceProvider extends DataSourceProvider {
     }
 
 
-    public void searchForRecipes(ArrayList<String> searchTerms, boolean byTitle) {
+    public void searchForRecipesList(ArrayList<String> searchTerms, boolean byTitle) {
 
         mUrlParams = searchTerms;
         mSearchByTitle = byTitle;

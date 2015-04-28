@@ -12,6 +12,7 @@ public enum DataSource {
 
 
     BigOven,
+    FatSecret,
 
 
 }

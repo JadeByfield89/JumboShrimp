@@ -31,18 +31,29 @@ import com.permoveo.apps.jumboshrimp.listeners.OnApiRequestCompletedListener;
 import com.permoveo.apps.jumboshrimp.model.Recipe;
 import com.permoveo.apps.jumboshrimp.providers.BigOvenDataSourceProvider;
 import com.permoveo.apps.jumboshrimp.providers.DataSourceProvider;
+import com.permoveo.apps.jumboshrimp.providers.FatSecretDataSourceProvider;
+
 import android.speech.RecognitionListener;
 
-
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+import butterknife.OnClick;
 
 
 public class RecipeSearchFragment extends Fragment implements View.OnClickListener, OnApiRequestCompletedListener, RecognitionListener {
 
-    private EditText mSearchField;
-    private Button mSearchButton;
-    private Button mClearSearchButton;
-    private Button mVoiceCommand;
-    private TextView mResultText;
+
+    @InjectView(R.id.etSearchField)
+    EditText mSearchField;
+    @InjectView(R.id.bSearch)
+    Button mSearchButton;
+    @InjectView(R.id.bClearSearch)
+    Button mClearSearchButton;
+    @InjectView(R.id.bVoiceCommand)
+    Button mVoiceCommand;
+    @InjectView(R.id.tvResultText)
+    TextView mResultText;
+
     private ArrayList<String> mSearchTerms = new ArrayList<String>();
     private onRecipesLoadedListener mListener;
     BigOvenDataSourceProvider mProvider;
@@ -95,25 +106,50 @@ public class RecipeSearchFragment extends Fragment implements View.OnClickListen
         View v = inflater.inflate(R.layout.fragment_search, container, false);
         RelativeLayout layout = (RelativeLayout) v.findViewById(R.id.rlContainer);
 
-        mSearchField = (EditText) layout.findViewById(R.id.etSearchField);
-        mSearchButton = (Button) v.findViewById(R.id.bSearch);
-        mClearSearchButton = (Button) v.findViewById(R.id.bClearSearch);
-        mVoiceCommand = (Button) v.findViewById(R.id.bVoiceCommand);
-        mResultText = (TextView) v.findViewById(R.id.tvResultText);
-        mResultText.setVisibility(View.INVISIBLE);
 
-        mSearchButton.setOnClickListener(this);
-        mClearSearchButton.setOnClickListener(this);
-        mSearchField.setOnClickListener(this);
-        mVoiceCommand.setOnClickListener(this);
+        ButterKnife.inject(this, v);
+        mResultText.setVisibility(View.INVISIBLE);
 
 
         mRecognizer = SpeechRecognizer.createSpeechRecognizer(getActivity());
         mRecognizer.setRecognitionListener(this);
 
+
+        //TESTING FAT SECRET API
+        FatSecretDataSourceProvider provider = new FatSecretDataSourceProvider(getActivity());
+        provider.searchForFoodByTitle("banana");
+
         // Inflate the layout for this fragment
         return v;
     }
+
+
+    @OnClick(R.id.bClearSearch)
+    public void clearSearch() {
+
+        mSearchField.setText("");
+        mResultText.setText("");
+    }
+
+    @OnClick(R.id.bSearch)
+    public void search() {
+        extractSearchTerms();
+        performSearch(mSearchTerms);
+    }
+
+
+    @OnClick(R.id.bVoiceCommand)
+    public void voiceSearch() {
+        if (!mVoiceMode) {
+            mVoiceMode = true;
+            mVoiceCommand.setText("Listening...");
+            startSpeechRecognizer();
+        } else {
+            mVoiceMode = false;
+            mVoiceCommand.setText("Voice Command");
+        }
+    }
+
 
     @Override
     public void onClick(View v) {
@@ -139,7 +175,7 @@ public class RecipeSearchFragment extends Fragment implements View.OnClickListen
                     startSpeechRecognizer();
                 } else {
                     mVoiceMode = false;
-                    mVoiceCommand.setText("VoiceCommand");
+                    mVoiceCommand.setText("Voice Command");
                 }
                 break;
         }
@@ -149,12 +185,12 @@ public class RecipeSearchFragment extends Fragment implements View.OnClickListen
     private void startSpeechRecognizer() {
         {
             Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-            intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-            intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE,"voice.recognition.test");
+            intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+            intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, "voice.recognition.test");
 
-            intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS,5);
+            intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 5);
             mRecognizer.startListening(intent);
-            Log.i("111111","11111111");
+            Log.i("111111", "11111111");
         }
     }
 
@@ -169,9 +205,10 @@ public class RecipeSearchFragment extends Fragment implements View.OnClickListen
     }
 
     private void performSearch(ArrayList<String> terms) {
+
         mProvider = new BigOvenDataSourceProvider(getActivity());
         mProvider.setListener(this);
-        mProvider.searchForRecipes(terms, false);
+        mProvider.searchForRecipesList(terms, false);
 
 
     }
@@ -183,6 +220,10 @@ public class RecipeSearchFragment extends Fragment implements View.OnClickListen
 
     @Override
     public void onApiRequestSuccess() {
+
+        //Clear the search list
+        mSearchTerms.clear();
+        mSearchField.setText("");
 
         //Log.d("SearchFragment", "API RESPONSE! -> " + object.toString());
         Toast.makeText(getActivity(), "API RESPONSE", Toast.LENGTH_SHORT).show();
@@ -232,8 +273,7 @@ public class RecipeSearchFragment extends Fragment implements View.OnClickListen
         String str = new String();
         Log.d("RecipeSearchFragment", "onResults " + results);
         ArrayList<String> data = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
-        for (int i = 0; i < data.size(); i++)
-        {
+        for (int i = 0; i < data.size(); i++) {
             Log.d("RecipeSearchFragment", "result " + data.get(i));
             str += data.get(i);
         }
@@ -243,7 +283,6 @@ public class RecipeSearchFragment extends Fragment implements View.OnClickListen
 
         mSearchTerms.add(data.get(0));
         performSearch(mSearchTerms);
-
 
 
     }

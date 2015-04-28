@@ -10,7 +10,7 @@ public class Ingredient extends BaseItem implements Serializable{
     private Recipe mRecipe;
     private Photo mPhoto;
 
-    //TODO - Add support for ingredient allergies
+    //TODO - Add support for ingredient allergies, nutrition
 
 
     public Ingredient(Recipe recipe){
