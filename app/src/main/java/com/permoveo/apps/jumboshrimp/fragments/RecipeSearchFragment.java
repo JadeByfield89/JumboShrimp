@@ -141,7 +141,9 @@ public class RecipeSearchFragment extends Fragment implements OnApiRequestComple
     @OnClick(R.id.bSearch)
     public void search() {
         String mSearchTerm  = mSearchField.getText().toString();
-        performSearch(mSearchTerm);
+        if (!mSearchTerm.isEmpty()) {
+            performSearch(mSearchTerm);
+        }
     }
 
 
