@@ -62,8 +62,6 @@ public class RecipeSearchFragment extends Fragment implements OnApiRequestComple
     Button mScanBarcode;
 
 
-
-
     private OnRecipesLoadedListener mOnRecipesLoadedListener;
     BigOvenDataSourceProvider mProvider;
     private boolean mVoiceMode = false;
@@ -116,10 +114,6 @@ public class RecipeSearchFragment extends Fragment implements OnApiRequestComple
         mRecognizer.setRecognitionListener(this);
 
 
-        //TESTING FAT SECRET API
-        FatSecretDataSourceProvider provider = new FatSecretDataSourceProvider(getActivity());
-        provider.searchForFoodByTitle("banana");
-
         // Inflate the layout for this fragment
         return v;
     }
@@ -134,7 +128,7 @@ public class RecipeSearchFragment extends Fragment implements OnApiRequestComple
 
     @OnClick(R.id.bSearch)
     public void search() {
-        String mSearchTerm  = mSearchField.getText().toString();
+        String mSearchTerm = mSearchField.getText().toString();
         if (!mSearchTerm.isEmpty()) {
             performSearch(mSearchTerm);
         }
@@ -154,7 +148,7 @@ public class RecipeSearchFragment extends Fragment implements OnApiRequestComple
     }
 
     @OnClick(R.id.bBarCodeScan)
-    public void scanBarcode(){
+    public void scanBarcode() {
 
         FragmentManager manager = getChildFragmentManager();
         BarcodeScannerFragment fragment = new BarcodeScannerFragment();
