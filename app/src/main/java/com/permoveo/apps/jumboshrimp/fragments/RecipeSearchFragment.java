@@ -42,7 +42,7 @@ import butterknife.InjectView;
 import butterknife.OnClick;
 
 
-public class RecipeSearchFragment extends Fragment implements View.OnClickListener, OnApiRequestCompletedListener, RecognitionListener {
+public class RecipeSearchFragment extends Fragment implements OnApiRequestCompletedListener, RecognitionListener {
 
 
     @InjectView(R.id.etSearchField)
@@ -62,7 +62,6 @@ public class RecipeSearchFragment extends Fragment implements View.OnClickListen
 
 
 
-    private ArrayList<String> mSearchTerms = new ArrayList<String>();
     private onRecipesLoadedListener mListener;
     BigOvenDataSourceProvider mProvider;
     private boolean mVoiceMode = false;
@@ -141,8 +140,8 @@ public class RecipeSearchFragment extends Fragment implements View.OnClickListen
 
     @OnClick(R.id.bSearch)
     public void search() {
-        extractSearchTerms();
-        performSearch(mSearchTerms);
+        String mSearchTerm  = mSearchField.getText().toString();
+        performSearch(mSearchTerm);
     }
 
 
@@ -172,37 +171,6 @@ public class RecipeSearchFragment extends Fragment implements View.OnClickListen
     }
 
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.bClearSearch:
-
-                mResultText.setText("");
-                break;
-
-            case R.id.bSearch:
-                extractSearchTerms();
-                performSearch(mSearchTerms);
-                break;
-
-            case R.id.etSearchField:
-                Log.d("SearchFragment", "search field touched");
-                break;
-
-            case R.id.bVoiceCommand:
-                if (!mVoiceMode) {
-                    mVoiceMode = true;
-                    mVoiceCommand.setText("Listening...");
-                    startSpeechRecognizer();
-                } else {
-                    mVoiceMode = false;
-                    mVoiceCommand.setText("Voice Command");
-                }
-                break;
-        }
-    }
-
-
     private void startSpeechRecognizer() {
         {
             Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
@@ -215,21 +183,11 @@ public class RecipeSearchFragment extends Fragment implements View.OnClickListen
         }
     }
 
-    private void extractSearchTerms() {
-
-        //Extracts individual search terms from the EditText field and composes a list out of them
-        String queryEntered = mSearchField.getText().toString();
-        Log.d("SearchFragment", "Query -> " + queryEntered);
-        mSearchTerms.add(queryEntered);
-        Log.d("SearchFragment", "List size -> " + mSearchTerms.size());
-
-    }
-
-    private void performSearch(ArrayList<String> terms) {
+    private void performSearch(String term) {
 
         mProvider = new BigOvenDataSourceProvider(getActivity());
         mProvider.setListener(this);
-        mProvider.searchForRecipesList(terms, false);
+        mProvider.searchForRecipesList(term, false);
 
 
     }
@@ -243,7 +201,6 @@ public class RecipeSearchFragment extends Fragment implements View.OnClickListen
     public void onApiRequestSuccess() {
 
         //Clear the search list
-        mSearchTerms.clear();
         mSearchField.setText("");
 
         //Log.d("SearchFragment", "API RESPONSE! -> " + object.toString());
@@ -302,8 +259,7 @@ public class RecipeSearchFragment extends Fragment implements View.OnClickListen
         mResultText.setText(data.get(0));
         mSearchField.setText(data.get(0));
 
-        mSearchTerms.add(data.get(0));
-        performSearch(mSearchTerms);
+        performSearch(data.get(0));
 
 
     }

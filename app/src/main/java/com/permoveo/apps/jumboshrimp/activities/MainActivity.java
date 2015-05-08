@@ -34,12 +34,6 @@ public class MainActivity extends FragmentActivity implements RecipeSearchFragme
         fragmentTransaction.add(R.id.activity_main_container, mRecipeSearchFragment).commit();
 
         Log.d("MainActivity", "onCreate");
-
-
-
-
-
-
     }
 
     @Override
