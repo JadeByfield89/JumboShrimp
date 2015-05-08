@@ -1,9 +1,9 @@
 package com.permoveo.apps.jumboshrimp.activities;
 
 import android.os.Bundle;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 
 import com.permoveo.apps.jumboshrimp.R;
@@ -29,9 +29,9 @@ public class MainActivity extends FragmentActivity implements RecipeSearchFragme
 
 
         mRecipeSearchFragment = new RecipeSearchFragment();
-        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add(R.id.activity_main_container, mRecipeSearchFragment).commit();
+        fragmentTransaction.add(R.id.activity_main_container, mRecipeSearchFragment).addToBackStack("search").commit();
 
         Log.d("MainActivity", "onCreate");
 
@@ -42,6 +42,7 @@ public class MainActivity extends FragmentActivity implements RecipeSearchFragme
 
     }
 
+
     @Override
     public void onRecipesLoaded(List<Recipe> recipes) {
         Log.d("MainActivity", "onRecipesLoaded");
@@ -49,8 +50,12 @@ public class MainActivity extends FragmentActivity implements RecipeSearchFragme
         RecipeSearchResultsFragment fragment = new RecipeSearchResultsFragment();
         fragment.setResults(recipes);
 
-        FragmentManager manager = getSupportFragmentManager();
+        FragmentManager manager = getFragmentManager();
         FragmentTransaction fragmentTransaction = manager.beginTransaction();
         fragmentTransaction.replace(R.id.activity_main_container, fragment).addToBackStack("results").commit();
+    }
+
+    public static void showVoiceDialog(){
+
     }
 }

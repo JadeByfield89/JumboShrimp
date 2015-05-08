@@ -7,8 +7,9 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -58,8 +59,6 @@ public class RecipeSearchFragment extends Fragment implements View.OnClickListen
 
     @InjectView(R.id.bBarCodeScan)
     Button mScanBarcode;
-
-
 
 
     private ArrayList<String> mSearchTerms = new ArrayList<String>();
@@ -124,8 +123,8 @@ public class RecipeSearchFragment extends Fragment implements View.OnClickListen
 
 
         //TESTING FAT SECRET API
-        FatSecretDataSourceProvider provider = new FatSecretDataSourceProvider(getActivity());
-        provider.searchForFoodByTitle("banana");
+        //FatSecretDataSourceProvider provider = new FatSecretDataSourceProvider(getActivity());
+        //provider.searchForFoodByTitle("banana");
 
         // Inflate the layout for this fragment
         return v;
@@ -159,7 +158,7 @@ public class RecipeSearchFragment extends Fragment implements View.OnClickListen
     }
 
     @OnClick(R.id.bBarCodeScan)
-    public void scanBarcode(){
+    public void scanBarcode() {
 
         FragmentManager manager = getChildFragmentManager();
         BarcodeScannerFragment fragment = new BarcodeScannerFragment();
@@ -193,13 +192,26 @@ public class RecipeSearchFragment extends Fragment implements View.OnClickListen
                 if (!mVoiceMode) {
                     mVoiceMode = true;
                     mVoiceCommand.setText("Listening...");
-                    startSpeechRecognizer();
+
+                    launchSpeechRecognizerFragment();
+                    //startSpeechRecognizer();
                 } else {
                     mVoiceMode = false;
                     mVoiceCommand.setText("Voice Command");
                 }
                 break;
         }
+    }
+
+
+    private void launchSpeechRecognizerFragment() {
+
+        VoiceDialogFragment fragment = new VoiceDialogFragment();
+        FragmentManager manager = getChildFragmentManager();
+        fragment.show(manager, "voiceFragment");
+
+
+
     }
 
 
@@ -317,4 +329,7 @@ public class RecipeSearchFragment extends Fragment implements View.OnClickListen
     public void onEvent(int eventType, Bundle params) {
 
     }
+
+
+
 }

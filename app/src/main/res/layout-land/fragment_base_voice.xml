@@ -1,0 +1,35 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#fff"
+    tools:context="com.permoveo.apps.jumboshrimp.fragments.BaseVoiceFragment">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <Button
+            android:id="@+id/bListen"
+            android:layout_width="wrap_content"
+            android:layout_marginTop="40dp"
+            android:layout_height="wrap_content"
+            android:text="Listen"
+            android:layout_centerHorizontal="true"></Button>
+
+
+        <TextView
+            android:id="@+id/tvVoiceResult"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/bListen"
+            android:layout_marginTop="30dp"
+            android:text="Result Text"
+            android:textSize="30sp"
+            android:layout_centerHorizontal="true" />
+
+
+    </RelativeLayout>
+
+
+</FrameLayout>
