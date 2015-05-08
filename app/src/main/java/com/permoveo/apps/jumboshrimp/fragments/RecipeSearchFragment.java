@@ -7,9 +7,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -61,6 +60,8 @@ public class RecipeSearchFragment extends Fragment implements OnApiRequestComple
 
     @InjectView(R.id.bBarCodeScan)
     Button mScanBarcode;
+
+
 
 
     private OnRecipesLoadedListener mOnRecipesLoadedListener;
@@ -116,8 +117,8 @@ public class RecipeSearchFragment extends Fragment implements OnApiRequestComple
 
 
         //TESTING FAT SECRET API
-        //FatSecretDataSourceProvider provider = new FatSecretDataSourceProvider(getActivity());
-        //provider.searchForFoodByTitle("banana");
+        FatSecretDataSourceProvider provider = new FatSecretDataSourceProvider(getActivity());
+        provider.searchForFoodByTitle("banana");
 
         // Inflate the layout for this fragment
         return v;
@@ -133,7 +134,7 @@ public class RecipeSearchFragment extends Fragment implements OnApiRequestComple
 
     @OnClick(R.id.bSearch)
     public void search() {
-        String mSearchTerm = mSearchField.getText().toString();
+        String mSearchTerm  = mSearchField.getText().toString();
         if (!mSearchTerm.isEmpty()) {
             performSearch(mSearchTerm);
         }
@@ -153,7 +154,7 @@ public class RecipeSearchFragment extends Fragment implements OnApiRequestComple
     }
 
     @OnClick(R.id.bBarCodeScan)
-    public void scanBarcode() {
+    public void scanBarcode(){
 
         FragmentManager manager = getChildFragmentManager();
         BarcodeScannerFragment fragment = new BarcodeScannerFragment();
@@ -279,6 +280,4 @@ public class RecipeSearchFragment extends Fragment implements OnApiRequestComple
     public void onEvent(int eventType, Bundle params) {
 
     }
-
-
 }

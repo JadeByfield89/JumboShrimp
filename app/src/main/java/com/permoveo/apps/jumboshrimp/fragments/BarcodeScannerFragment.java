@@ -5,7 +5,7 @@ import android.content.pm.ActivityInfo;
 import android.hardware.Camera;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,7 +20,7 @@ import com.permoveo.apps.jumboshrimp.R;
 /**
  * Created by byfieldj on 4/28/15.
  */
-public class BarcodeScannerFragment extends Fragment {
+public class BarcodeScannerFragment extends Fragment{
 
 
     @Override
@@ -29,13 +29,15 @@ public class BarcodeScannerFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_barcode_scan, container, false);
 
 
+
+
         //Set up barcode scanner
         startBarcodeScan();
         return v;
     }
 
 
-    private void startBarcodeScan() {
+    private void startBarcodeScan(){
         IntentIntegrator integrator = new IntentIntegrator(getActivity());
         integrator.setCaptureLayout(R.layout.layout_barcode_scan);
         //integrator.setLegacyCaptureLayout(R.layout.custom_legacy_capture_layout);
@@ -44,7 +46,7 @@ public class BarcodeScannerFragment extends Fragment {
         integrator.setOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
         integrator.setCameraId(Camera.CameraInfo.CAMERA_FACING_BACK);
 
-        IntentIntegrator.forFragment(this);
+        IntentIntegrator.forSupportFragment(this);
         integrator.initiateScan();
     }
 
@@ -52,8 +54,8 @@ public class BarcodeScannerFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-        if (result != null) {
-            if (result.getContents() == null) {
+        if(result != null) {
+            if(result.getContents() == null) {
                 Log.d("BarcodeScannerFragment", "onActivityResult: result NULL");
             } else {
                 Log.d("BarcodeScannerFragment", "onActivityResult: result NOT NULL " + result.getContents());
