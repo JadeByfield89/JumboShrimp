@@ -51,5 +51,5 @@ public class MainActivity extends FragmentActivity implements RecipeSearchFragme
         FragmentUtil.replaceFragment(getSupportFragmentManager(), R.id.activity_main_container, fragment);
     }
 
-    
+
 }
