@@ -42,6 +42,11 @@ public class FatSecretDataSourceProvider extends DataSourceProvider {
 
     }
 
+    @Override
+    public void constructUrl(String urlParam) {
+
+    }
+
 
     public FatSecretDataSourceProvider(Context context) {
         mContext = context;

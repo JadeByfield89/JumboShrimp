@@ -14,6 +14,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -62,19 +63,16 @@ public class BigOvenDataSourceProvider extends DataSourceProvider {
 
     }
 
+    public void searchForRecipesList(String searchTerm, boolean byTitle) {
 
-    public void searchForRecipesList(ArrayList<String> searchTerms, boolean byTitle) {
-
-        mUrlParams = searchTerms;
         mSearchByTitle = byTitle;
 
 
-        if (searchTerms != null && !searchTerms.isEmpty()) {
-            constructUrl(searchTerms);
+        if (searchTerm != null && !searchTerm.isEmpty()) {
+            constructUrl(searchTerm);
         } else {
             throw new NullPointerException("Search query list must not be empty!");
         }
-
 
         JsonObjectRequest objectRequest = new JsonObjectRequest(Request.Method.GET, RECIPES_ENDPOINT, null, new Response.Listener<JSONObject>() {
             @Override
@@ -100,11 +98,70 @@ public class BigOvenDataSourceProvider extends DataSourceProvider {
 
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String, String> params = new HashMap<String, String>();
+                Map<String, String> params = super.getHeaders();
+                if (params == null || params.equals(Collections.emptyMap())) {
+                    params = new HashMap<String, String>();
+                }
                 params.put("Accept", "application/json");
 
                 return params;
             }
+
+
+
+        };
+
+        //Add the request to our RequestQueue
+        CoreApplication.getInstance().addToRequestQueue(objectRequest);
+
+
+    }
+
+    public void searchForRecipesList(ArrayList<String> searchTerms, boolean byTitle) {
+
+        mUrlParams = searchTerms;
+        mSearchByTitle = byTitle;
+
+
+        if (searchTerms != null && !searchTerms.isEmpty()) {
+            constructUrl(searchTerms);
+        } else {
+            throw new NullPointerException("Search query list must not be empty!");
+        }
+
+        JsonObjectRequest objectRequest = new JsonObjectRequest(Request.Method.GET, RECIPES_ENDPOINT, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+
+                parseObjectToList(response);
+                Log.d(TAG, "onResponse: Response -> " + response.toString());
+                mListener.onApiRequestSuccess();
+            }
+
+
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+                Log.d(TAG, "onErrorResponse: " + error.getMessage());
+                mListener.onApiRequestError();
+            }
+
+
+        }) {
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = super.getHeaders();
+                if (params == null || params.equals(Collections.emptyMap())) {
+                    params = new HashMap<String, String>();
+                }
+                params.put("Accept", "application/json");
+
+                return params;
+            }
+
 
 
         };
@@ -142,6 +199,33 @@ public class BigOvenDataSourceProvider extends DataSourceProvider {
             }
 
 
+        }
+
+        RECIPES_ENDPOINT = urlBuilder.toString();
+        Log.d(TAG, "constructUrl, Search URL -> " + RECIPES_ENDPOINT);
+
+
+    }
+
+    @Override
+    public void constructUrl(String searchTerm) {
+
+
+        //TODO: Make reusable
+        //via a URLManager class that will execute this same behavior for all DataSourceProviders
+        //first, add our static params to the URL
+        StringBuilder urlBuilder = new StringBuilder();
+        urlBuilder.append(RECIPES_ENDPOINT);
+        urlBuilder.append("&api_key=" + API_KEY);
+        urlBuilder.append("&pg=" + CURRENT_PAGE);
+        urlBuilder.append("&rpp=" + RESULTS_PER_PAGE);
+
+
+        //If this is a search by recipe title, then the "any_kw" param is not needed, but the "title_kw" is
+        if (mSearchByTitle) {
+            urlBuilder.append("&title_kw=" + searchTerm);
+        } else {
+            urlBuilder.append("&any_kw=" + searchTerm);
         }
 
         RECIPES_ENDPOINT = urlBuilder.toString();

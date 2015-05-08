@@ -63,6 +63,8 @@ public abstract class DataSourceProvider {
 
     public abstract void constructUrl(ArrayList<String> urlParams);
 
+    public abstract void constructUrl(String urlParam);
+
     public void setApiCallLimit(int limit) {
         API_CALL_LIMIT = limit;
     }

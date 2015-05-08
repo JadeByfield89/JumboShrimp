@@ -35,6 +35,7 @@ import com.permoveo.apps.jumboshrimp.model.Recipe;
 import com.permoveo.apps.jumboshrimp.providers.BigOvenDataSourceProvider;
 import com.permoveo.apps.jumboshrimp.providers.DataSourceProvider;
 import com.permoveo.apps.jumboshrimp.providers.FatSecretDataSourceProvider;
+import com.permoveo.apps.jumboshrimp.utils.FragmentUtil;
 
 import android.speech.RecognitionListener;
 
@@ -43,8 +44,9 @@ import butterknife.InjectView;
 import butterknife.OnClick;
 
 
-public class RecipeSearchFragment extends Fragment implements View.OnClickListener, OnApiRequestCompletedListener, RecognitionListener {
+public class RecipeSearchFragment extends Fragment implements OnApiRequestCompletedListener, RecognitionListener {
 
+    public static final String TAG = RecipeSearchFragment.class.getSimpleName();
 
     @InjectView(R.id.etSearchField)
     EditText mSearchField;
@@ -61,8 +63,7 @@ public class RecipeSearchFragment extends Fragment implements View.OnClickListen
     Button mScanBarcode;
 
 
-    private ArrayList<String> mSearchTerms = new ArrayList<String>();
-    private onRecipesLoadedListener mListener;
+    private OnRecipesLoadedListener mOnRecipesLoadedListener;
     BigOvenDataSourceProvider mProvider;
     private boolean mVoiceMode = false;
     private SpeechRecognizer mRecognizer;
@@ -96,14 +97,6 @@ public class RecipeSearchFragment extends Fragment implements View.OnClickListen
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-
-
-        try {
-            mListener = (onRecipesLoadedListener) activity;
-        } catch (ClassCastException e) {
-            Log.d("RecipeSearchFragment", "Activity must implement onRecipesLoadedListener!");
-            e.printStackTrace();
-        }
     }
 
     @Override
@@ -140,8 +133,10 @@ public class RecipeSearchFragment extends Fragment implements View.OnClickListen
 
     @OnClick(R.id.bSearch)
     public void search() {
-        extractSearchTerms();
-        performSearch(mSearchTerms);
+        String mSearchTerm = mSearchField.getText().toString();
+        if (!mSearchTerm.isEmpty()) {
+            performSearch(mSearchTerm);
+        }
     }
 
 
@@ -171,50 +166,6 @@ public class RecipeSearchFragment extends Fragment implements View.OnClickListen
     }
 
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.bClearSearch:
-
-                mResultText.setText("");
-                break;
-
-            case R.id.bSearch:
-                extractSearchTerms();
-                performSearch(mSearchTerms);
-                break;
-
-            case R.id.etSearchField:
-                Log.d("SearchFragment", "search field touched");
-                break;
-
-            case R.id.bVoiceCommand:
-                if (!mVoiceMode) {
-                    mVoiceMode = true;
-                    mVoiceCommand.setText("Listening...");
-
-                    launchSpeechRecognizerFragment();
-                    //startSpeechRecognizer();
-                } else {
-                    mVoiceMode = false;
-                    mVoiceCommand.setText("Voice Command");
-                }
-                break;
-        }
-    }
-
-
-    private void launchSpeechRecognizerFragment() {
-
-        VoiceDialogFragment fragment = new VoiceDialogFragment();
-        FragmentManager manager = getChildFragmentManager();
-        fragment.show(manager, "voiceFragment");
-
-
-
-    }
-
-
     private void startSpeechRecognizer() {
         {
             Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
@@ -227,46 +178,46 @@ public class RecipeSearchFragment extends Fragment implements View.OnClickListen
         }
     }
 
-    private void extractSearchTerms() {
+    private void performSearch(String term) {
 
-        //Extracts individual search terms from the EditText field and composes a list out of them
-        String queryEntered = mSearchField.getText().toString();
-        Log.d("SearchFragment", "Query -> " + queryEntered);
-        mSearchTerms.add(queryEntered);
-        Log.d("SearchFragment", "List size -> " + mSearchTerms.size());
-
-    }
-
-    private void performSearch(ArrayList<String> terms) {
+        // Show progress dialog
+        FragmentUtil.showProgressDialog(getActivity());
 
         mProvider = new BigOvenDataSourceProvider(getActivity());
         mProvider.setListener(this);
-        mProvider.searchForRecipesList(terms, false);
-
+        mProvider.searchForRecipesList(term, false);
 
     }
 
-    public interface onRecipesLoadedListener {
+    public interface OnRecipesLoadedListener {
         public abstract void onRecipesLoaded(List<Recipe> recipes);
     }
 
+    public void setOnRecipesLoadedListener(OnRecipesLoadedListener listener) {
+        this.mOnRecipesLoadedListener = listener;
+    }
 
     @Override
     public void onApiRequestSuccess() {
 
+        // Clear progress dialog
+        FragmentUtil.clearProgressDialog(getActivity());
+
         //Clear the search list
-        mSearchTerms.clear();
         mSearchField.setText("");
 
         //Log.d("SearchFragment", "API RESPONSE! -> " + object.toString());
         Toast.makeText(getActivity(), "API RESPONSE", Toast.LENGTH_SHORT).show();
 
-        mListener.onRecipesLoaded(mProvider.getRecipes());
+        if (mOnRecipesLoadedListener != null) {
+            mOnRecipesLoadedListener.onRecipesLoaded(mProvider.getRecipes());
+        }
     }
 
     @Override
     public void onApiRequestError() {
-
+        // Clear progress dialog
+        FragmentUtil.clearProgressDialog(getActivity());
     }
 
 
@@ -314,8 +265,7 @@ public class RecipeSearchFragment extends Fragment implements View.OnClickListen
         mResultText.setText(data.get(0));
         mSearchField.setText(data.get(0));
 
-        mSearchTerms.add(data.get(0));
-        performSearch(mSearchTerms);
+        performSearch(data.get(0));
 
 
     }
@@ -329,7 +279,6 @@ public class RecipeSearchFragment extends Fragment implements View.OnClickListen
     public void onEvent(int eventType, Bundle params) {
 
     }
-
 
 
 }
