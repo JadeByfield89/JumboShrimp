@@ -34,6 +34,7 @@ import com.permoveo.apps.jumboshrimp.model.Recipe;
 import com.permoveo.apps.jumboshrimp.providers.BigOvenDataSourceProvider;
 import com.permoveo.apps.jumboshrimp.providers.DataSourceProvider;
 import com.permoveo.apps.jumboshrimp.providers.FatSecretDataSourceProvider;
+import com.permoveo.apps.jumboshrimp.utils.FragmentUtil;
 
 import android.speech.RecognitionListener;
 
@@ -44,6 +45,7 @@ import butterknife.OnClick;
 
 public class RecipeSearchFragment extends Fragment implements OnApiRequestCompletedListener, RecognitionListener {
 
+    public static final String TAG = RecipeSearchFragment.class.getSimpleName();
 
     @InjectView(R.id.etSearchField)
     EditText mSearchField;
@@ -62,7 +64,7 @@ public class RecipeSearchFragment extends Fragment implements OnApiRequestComple
 
 
 
-    private onRecipesLoadedListener mListener;
+    private OnRecipesLoadedListener mOnRecipesLoadedListener;
     BigOvenDataSourceProvider mProvider;
     private boolean mVoiceMode = false;
     private SpeechRecognizer mRecognizer;
@@ -96,14 +98,6 @@ public class RecipeSearchFragment extends Fragment implements OnApiRequestComple
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-
-
-        try {
-            mListener = (onRecipesLoadedListener) activity;
-        } catch (ClassCastException e) {
-            Log.d("RecipeSearchFragment", "Activity must implement onRecipesLoadedListener!");
-            e.printStackTrace();
-        }
     }
 
     @Override
@@ -187,20 +181,28 @@ public class RecipeSearchFragment extends Fragment implements OnApiRequestComple
 
     private void performSearch(String term) {
 
+        // Show progress dialog
+        FragmentUtil.showProgressDialog(getActivity());
+
         mProvider = new BigOvenDataSourceProvider(getActivity());
         mProvider.setListener(this);
         mProvider.searchForRecipesList(term, false);
 
-
     }
 
-    public interface onRecipesLoadedListener {
+    public interface OnRecipesLoadedListener {
         public abstract void onRecipesLoaded(List<Recipe> recipes);
     }
 
+    public void setOnRecipesLoadedListener(OnRecipesLoadedListener listener) {
+        this.mOnRecipesLoadedListener = listener;
+    }
 
     @Override
     public void onApiRequestSuccess() {
+
+        // Clear progress dialog
+        FragmentUtil.clearProgressDialog(getActivity());
 
         //Clear the search list
         mSearchField.setText("");
@@ -208,12 +210,15 @@ public class RecipeSearchFragment extends Fragment implements OnApiRequestComple
         //Log.d("SearchFragment", "API RESPONSE! -> " + object.toString());
         Toast.makeText(getActivity(), "API RESPONSE", Toast.LENGTH_SHORT).show();
 
-        mListener.onRecipesLoaded(mProvider.getRecipes());
+        if (mOnRecipesLoadedListener != null) {
+            mOnRecipesLoadedListener.onRecipesLoaded(mProvider.getRecipes());
+        }
     }
 
     @Override
     public void onApiRequestError() {
-
+        // Clear progress dialog
+        FragmentUtil.clearProgressDialog(getActivity());
     }
 
 

@@ -11,14 +11,14 @@ import com.permoveo.apps.jumboshrimp.R;
 import com.permoveo.apps.jumboshrimp.fragments.RecipeSearchFragment;
 import com.permoveo.apps.jumboshrimp.fragments.RecipeSearchResultsFragment;
 import com.permoveo.apps.jumboshrimp.model.Recipe;
+import com.permoveo.apps.jumboshrimp.utils.FragmentUtil;
 
 import java.util.List;
 
 /**
  * Created by byfieldj on 4/14/15.
  */
-public class MainActivity extends FragmentActivity implements RecipeSearchFragment.onRecipesLoadedListener {
-
+public class MainActivity extends FragmentActivity implements RecipeSearchFragment.OnRecipesLoadedListener {
 
    private RecipeSearchFragment mRecipeSearchFragment;
 
@@ -29,9 +29,10 @@ public class MainActivity extends FragmentActivity implements RecipeSearchFragme
 
 
         mRecipeSearchFragment = new RecipeSearchFragment();
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add(R.id.activity_main_container, mRecipeSearchFragment).commit();
+        mRecipeSearchFragment.setOnRecipesLoadedListener(this);
+
+        FragmentUtil.addFragmentToLayout(this, R.id.activity_main_container, getSupportFragmentManager(),
+                mRecipeSearchFragment, RecipeSearchFragment.TAG);
 
         Log.d("MainActivity", "onCreate");
     }
@@ -43,8 +44,6 @@ public class MainActivity extends FragmentActivity implements RecipeSearchFragme
         RecipeSearchResultsFragment fragment = new RecipeSearchResultsFragment();
         fragment.setResults(recipes);
 
-        FragmentManager manager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = manager.beginTransaction();
-        fragmentTransaction.replace(R.id.activity_main_container, fragment).addToBackStack("results").commit();
+        FragmentUtil.replaceFragment(getSupportFragmentManager(), R.id.activity_main_container, fragment);
     }
 }
