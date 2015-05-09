@@ -6,7 +6,7 @@ package com.permoveo.apps.jumboshrimp.listeners;
 public interface OnVoiceRecognitionListener {
 
 
-    public void onSpeechResultSuccess();
+    public void onSpeechResultSuccess(String recognizedText);
 
     public void onSpeechResultError();
 

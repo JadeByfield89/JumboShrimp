@@ -61,17 +61,6 @@
             android:text="@string/scan_barcode"/>
 
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_below="@id/bBarCodeScan"
-            android:id="@+id/tvResultText"
-            android:text="Result"
-            android:textSize="60sp"
-            android:layout_marginTop="30dp" />
-
-
     </RelativeLayout>
 
 
