@@ -90,7 +90,12 @@ public class VoiceDialogFragment extends DialogFragment implements RecognitionLi
         super.onDestroy();
 
         mRecognizer.cancel();
-        mRecognizer.destroy();
+
+        try {
+            mRecognizer.destroy();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
