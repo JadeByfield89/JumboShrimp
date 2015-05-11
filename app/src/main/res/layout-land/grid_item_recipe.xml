@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:layout_weight="1">
 
-    <com.permoveo.apps.jumboshrimp.components.WidthSquareImageView
+    <com.permoveo.apps.jumboshrimp.view.WidthSquareImageView
         android:id="@+id/ivRecipePhoto"
         android:layout_height="match_parent"
         android:layout_width="match_parent"

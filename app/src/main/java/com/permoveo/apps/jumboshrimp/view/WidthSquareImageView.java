@@ -1,4 +1,4 @@
-package com.permoveo.apps.jumboshrimp.components;
+package com.permoveo.apps.jumboshrimp.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
