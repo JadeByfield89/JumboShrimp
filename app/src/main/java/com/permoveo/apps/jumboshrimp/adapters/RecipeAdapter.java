@@ -14,6 +14,9 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+
 /**
  * Created by byfieldj on 4/16/15.
  */
@@ -23,7 +26,7 @@ public class RecipeAdapter extends BaseAdapter {
     private Context mContext;
     private LayoutInflater mInflater;
 
-    public RecipeAdapter(Context context, List<Recipe> recipes){
+    public RecipeAdapter(Context context, List<Recipe> recipes) {
         mRecipes = recipes;
         mContext = context;
 
@@ -45,9 +48,17 @@ public class RecipeAdapter extends BaseAdapter {
         return position;
     }
 
-    private class ViewHolder{
-        private ImageView recipePhoto;
-        private TextView recipeTitle;
+    static class ViewHolder {
+
+        @InjectView(R.id.ivRecipePhoto)
+        public ImageView recipePhoto;
+
+        @InjectView(R.id.tvRecipeName)
+        public TextView recipeTitle;
+
+        public ViewHolder(View v) {
+            ButterKnife.inject(this, v);
+        }
     }
 
     @Override
@@ -55,18 +66,15 @@ public class RecipeAdapter extends BaseAdapter {
 
         ViewHolder holder;
 
-        if(convertView == null){
-            holder = new ViewHolder();
+        if (convertView == null) {
+
             convertView = mInflater.inflate(R.layout.grid_item_recipe, parent, false);
-            holder.recipePhoto = (ImageView) convertView.findViewById(R.id.ivRecipePhoto);
-            holder.recipeTitle = (TextView) convertView.findViewById(R.id.tvRecipeName);
+            holder = new ViewHolder(convertView);
 
             convertView.setTag(holder);
 
-        }
-
-        else
-        holder = (ViewHolder) convertView.getTag();
+        } else
+            holder = (ViewHolder) convertView.getTag();
 
 
         //Load the recipe photo
@@ -75,6 +83,7 @@ public class RecipeAdapter extends BaseAdapter {
 
         //Set recipe title
         holder.recipeTitle.setText(mRecipes.get(position).getRecipeName());
+
 
         return convertView;
     }
