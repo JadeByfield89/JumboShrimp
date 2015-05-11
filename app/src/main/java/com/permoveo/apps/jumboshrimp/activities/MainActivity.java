@@ -33,7 +33,7 @@ public class MainActivity extends FragmentActivity implements RecipeSearchFragme
         mRecipeSearchFragment.setOnRecipesLoadedListener(this);
 
 
-        FragmentUtil.addFragmentToLayout(this, R.id.activity_main_container, getSupportFragmentManager(),
+        FragmentUtil.addFragmentToLayout(this, R.id.content_frame, getSupportFragmentManager(),
                 mRecipeSearchFragment, RecipeSearchFragment.TAG);
 
         Log.d("MainActivity", "onCreate");
@@ -48,7 +48,7 @@ public class MainActivity extends FragmentActivity implements RecipeSearchFragme
         fragment.setResults(recipes);
 
 
-        FragmentUtil.replaceFragment(getSupportFragmentManager(), R.id.activity_main_container, fragment);
+        FragmentUtil.replaceFragment(getSupportFragmentManager(), R.id.content_frame, fragment);
     }
 
 

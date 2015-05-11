@@ -11,8 +11,11 @@ package com.permoveo.apps.jumboshrimp.constants;
 public enum DataSource {
 
 
-    BigOven,
-    FatSecret,
+    BigOven,  //Has over 350,000 recipes. Returns full recipe data/instructions
+    FatSecret, //Ingredient/Item Nutrition search
+    Edamam,    //Has over 1.5 million recipes, need to scrape URLs returned for instructions
+    KitchenManager, //Has 3,000 recipes. Returns full recipe data/instructions
+    Food2Fork //Has 200,000 recipes. Needs URL scraping for instructions
 
 
 }
