@@ -44,7 +44,7 @@ public class BigOvenDataSourceProvider extends DataSourceProvider {
 
     //Important to distinguish recipe/recipes here
     private String RECIPES_ENDPOINT = "http://api.bigoven.com/recipes?";
-    private String RECIPE_ENDPOINT = "http://api.bigoven.com/recipe?";
+    private String RECIPE_ENDPOINT = "http://api.bigoven.com/recipe/%s?";
 
     private JSONObject mResult;
     private List<String> mUrlParams;
@@ -61,6 +61,48 @@ public class BigOvenDataSourceProvider extends DataSourceProvider {
         setDataSource(DataSource.BigOven);
         setApiKey(API_KEY);
 
+    }
+
+    public void getRecipe(int recipeID) {
+        String url = new StringBuilder(String.format(RECIPE_ENDPOINT, recipeID))
+                .append("api_key=" + API_KEY).toString();
+
+        JsonObjectRequest objectRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+
+                parseObjectToRecipe(response);
+                Log.d(TAG, "onResponse: Response -> " + response.toString());
+                mListener.onApiRequestSuccess();
+            }
+
+
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+                Log.d(TAG, "onErrorResponse: " + error.getMessage());
+                mListener.onApiRequestError();
+            }
+
+
+        }) {
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = super.getHeaders();
+                if (params == null || params.equals(Collections.emptyMap())) {
+                    params = new HashMap<String, String>();
+                }
+                params.put("Accept", "application/json");
+
+                return params;
+            }
+        };
+
+        //Add the request to our RequestQueue
+        CoreApplication.getInstance().addToRequestQueue(objectRequest);
     }
 
     public void searchForRecipesList(String searchTerm, boolean byTitle) {
@@ -262,11 +304,26 @@ public class BigOvenDataSourceProvider extends DataSourceProvider {
 
     }
 
+    public void parseObjectToRecipe(JSONObject object) {
+
+//        try {
+
+            BigOvenParser parser = (BigOvenParser) ParserFactory.getParser(getDataSource());
+            mRecipe = parser.parseRecipe(object);
+
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+
+    }
+
 
     public List<Recipe> getRecipes() {
 
         return mRecipesList;
     }
 
-
+    public Recipe getRecipe() {
+        return mRecipe;
+    }
 }

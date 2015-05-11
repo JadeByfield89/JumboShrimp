@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.permoveo.apps.jumboshrimp.R;
-import com.permoveo.apps.jumboshrimp.components.WidthSquareImageView;
+import com.permoveo.apps.jumboshrimp.view.WidthSquareImageView;
 import com.permoveo.apps.jumboshrimp.model.Recipe;
 import com.squareup.picasso.Picasso;
 
