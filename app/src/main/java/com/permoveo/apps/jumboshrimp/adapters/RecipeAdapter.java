@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.permoveo.apps.jumboshrimp.R;
+import com.permoveo.apps.jumboshrimp.components.WidthSquareImageView;
 import com.permoveo.apps.jumboshrimp.model.Recipe;
 import com.squareup.picasso.Picasso;
 
@@ -46,7 +47,7 @@ public class RecipeAdapter extends BaseAdapter {
     }
 
     private class ViewHolder{
-        private ImageView recipePhoto;
+        private WidthSquareImageView recipePhoto;
         private TextView recipeTitle;
     }
 
@@ -58,7 +59,7 @@ public class RecipeAdapter extends BaseAdapter {
         if(convertView == null){
             holder = new ViewHolder();
             convertView = mInflater.inflate(R.layout.grid_item_recipe, parent, false);
-            holder.recipePhoto = (ImageView) convertView.findViewById(R.id.ivRecipePhoto);
+            holder.recipePhoto = (WidthSquareImageView) convertView.findViewById(R.id.ivRecipePhoto);
             holder.recipeTitle = (TextView) convertView.findViewById(R.id.tvRecipeName);
 
             convertView.setTag(holder);
