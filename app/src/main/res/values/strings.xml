@@ -7,6 +7,9 @@
     <string name="voice_command">Voice Command</string>
     <string name="scan_barcode">Scan Barcode</string>
     <string name="title_activity_activity_barcode_scan">ActivityBarcodeScan</string>
+    <string name="description">Description</string>
+    <string name="ingredients">Ingredients</string>
+    <string name="instructions">Instructions</string>
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>

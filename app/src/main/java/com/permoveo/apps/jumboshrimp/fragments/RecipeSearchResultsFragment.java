@@ -7,16 +7,18 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.GridView;
 
 import com.permoveo.apps.jumboshrimp.R;
 import com.permoveo.apps.jumboshrimp.adapters.RecipeAdapter;
 import com.permoveo.apps.jumboshrimp.model.Recipe;
+import com.permoveo.apps.jumboshrimp.utils.FragmentUtil;
 
 import java.util.List;
 
 
-public class RecipeSearchResultsFragment extends Fragment {
+public class RecipeSearchResultsFragment extends Fragment implements AdapterView.OnItemClickListener {
 
     private GridView mRecipesGrid;
     private RecipeAdapter mRecipeAdapter;
@@ -56,7 +58,7 @@ public class RecipeSearchResultsFragment extends Fragment {
         super.onResume();
         mRecipeAdapter  = new RecipeAdapter(getActivity(), mRecipes);
         mRecipesGrid.setAdapter(mRecipeAdapter);
-
+        mRecipesGrid.setOnItemClickListener(this);
     }
 
     @Override
@@ -71,6 +73,14 @@ public class RecipeSearchResultsFragment extends Fragment {
 
     }
 
+    @Override
+    public void onItemClick(android.widget.AdapterView<?> adapterView, android.view.View view, int i, long l) {
+        Recipe recipe = (Recipe)mRecipeAdapter.getItem(i);
+
+        RecipeDetailFragment fragment = RecipeDetailFragment.newInstance(recipe);
+        FragmentUtil.replaceFragment(getActivity().getSupportFragmentManager(), R.id.content_frame, fragment);
+    }
+
     public void setResults(List<Recipe> recipes){
         mRecipes = recipes;
     }
@@ -79,7 +89,5 @@ public class RecipeSearchResultsFragment extends Fragment {
 
         return mRecipes;
     }
-
-
 
 }

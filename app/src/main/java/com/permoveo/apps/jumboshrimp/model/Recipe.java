@@ -10,17 +10,19 @@ import java.util.List;
  */
 public class Recipe extends BaseItem implements Serializable{
 
-
+    private int mRecipeID;
     private List<Ingredient> mIngredients;
     private String mRecipeName;
     private String mPhotoUrl;
     private int mServingSize;
     private int mDuration;
     private Photo mPhoto;
+    private String mDescription;
+    private String mInstructions;
 
 
-
-    public Recipe(String name, String photoUrl){
+    public Recipe(int recipeID, String name, String photoUrl){
+        mRecipeID = recipeID;
         mRecipeName = name;
         mPhotoUrl = photoUrl;
 
@@ -34,6 +36,14 @@ public class Recipe extends BaseItem implements Serializable{
         mDuration = duration;
 
 
+    }
+
+    public void setRecipeID(int recipeID) {
+        mRecipeID = recipeID;
+    }
+
+    public int getRecipeID() {
+        return mRecipeID;
     }
 
     public void setRecipeName(String name){
@@ -60,6 +70,28 @@ public class Recipe extends BaseItem implements Serializable{
         return mPhoto;
     }
 
+    public void setIngredients(List<Ingredient> ingredients) {
+        this.mIngredients = ingredients;
+    }
 
+    public List<Ingredient> getIngredients() {
+        return mIngredients;
+    }
+
+    public void setDescription(String description) {
+        mDescription = description;
+    }
+
+    public String getDescription() {
+        return mDescription;
+    }
+
+    public void setInstructions(String instructions) {
+        mInstructions = instructions;
+    }
+
+    public String getInstructions() {
+        return mInstructions;
+    }
 
 }
