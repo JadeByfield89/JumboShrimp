@@ -55,7 +55,6 @@ public class BigOvenDataSourceProvider extends DataSourceProvider {
     private List<Recipe> mRecipesList;
 
 
-
     public BigOvenDataSourceProvider(Context context) {
         mContext = context;
         setDataSource(DataSource.BigOven);
@@ -148,62 +147,6 @@ public class BigOvenDataSourceProvider extends DataSourceProvider {
 
                 return params;
             }
-
-
-
-        };
-
-        //Add the request to our RequestQueue
-        CoreApplication.getInstance().addToRequestQueue(objectRequest);
-
-
-    }
-
-    public void searchForRecipesList(ArrayList<String> searchTerms, boolean byTitle) {
-
-        mUrlParams = searchTerms;
-        mSearchByTitle = byTitle;
-
-
-        if (searchTerms != null && !searchTerms.isEmpty()) {
-            constructUrl(searchTerms);
-        } else {
-            throw new NullPointerException("Search query list must not be empty!");
-        }
-
-        JsonObjectRequest objectRequest = new JsonObjectRequest(Request.Method.GET, RECIPES_ENDPOINT, null, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-
-                parseObjectToList(response);
-                Log.d(TAG, "onResponse: Response -> " + response.toString());
-                mListener.onApiRequestSuccess();
-            }
-
-
-        }, new Response.ErrorListener() {
-
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-                Log.d(TAG, "onErrorResponse: " + error.getMessage());
-                mListener.onApiRequestError();
-            }
-
-
-        }) {
-
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String, String> params = super.getHeaders();
-                if (params == null || params.equals(Collections.emptyMap())) {
-                    params = new HashMap<String, String>();
-                }
-                params.put("Accept", "application/json");
-
-                return params;
-            }
-
 
 
         };
@@ -308,8 +251,8 @@ public class BigOvenDataSourceProvider extends DataSourceProvider {
 
 //        try {
 
-            BigOvenParser parser = (BigOvenParser) ParserFactory.getParser(getDataSource());
-            mRecipe = parser.parseRecipe(object);
+        BigOvenParser parser = (BigOvenParser) ParserFactory.getParser(getDataSource());
+        mRecipe = parser.parseRecipe(object);
 
 //        } catch (JSONException e) {
 //            e.printStackTrace();

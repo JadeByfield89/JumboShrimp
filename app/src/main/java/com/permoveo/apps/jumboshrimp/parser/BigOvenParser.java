@@ -1,6 +1,8 @@
 package com.permoveo.apps.jumboshrimp.parser;
 
 
+import android.util.Log;
+
 import com.permoveo.apps.jumboshrimp.model.Ingredient;
 import com.permoveo.apps.jumboshrimp.model.Photo;
 import com.permoveo.apps.jumboshrimp.model.Recipe;
@@ -60,6 +62,7 @@ public class BigOvenParser implements  Parser {
                        instructions = object.getString(JSON_OBJECT_INSTRUCTIONS);
                    }
                    recipe.setInstructions(instructions);
+                   Log.d("BigOvenParser", "Instructions -> " + instructions);
 
                    ArrayList<Ingredient> ingredients = new ArrayList<Ingredient>();
                    if (object.has(JSON_OBJECT_INGREDIENTS)) {
