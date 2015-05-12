@@ -11,7 +11,9 @@ public class Ingredient extends BaseItem implements Serializable{
     private Photo mPhoto;
 
     //TODO - Add support for ingredient allergies, nutrition
-
+    private String mName;
+    private String mDisplayQuantity;
+    private String mPreparationNotes;
 
     public Ingredient(Recipe recipe){
         mRecipe = recipe;
@@ -23,5 +25,29 @@ public class Ingredient extends BaseItem implements Serializable{
 
     public Photo getPhoto(){
         return mPhoto;
+    }
+
+    public void setName(String name) {
+        mName = name;
+    }
+
+    public String getName() {
+        return mName;
+    }
+
+    public void setDisplayQuantity(String displayQuantity) {
+        mDisplayQuantity = displayQuantity;
+    }
+
+    public String getDisplayQuantity() {
+        return mDisplayQuantity;
+    }
+
+    public void setPreparationNotes(String preparationNotes) {
+        mPreparationNotes = preparationNotes;
+    }
+
+    public String getPreparationNotes() {
+        return mPreparationNotes;
     }
 }
