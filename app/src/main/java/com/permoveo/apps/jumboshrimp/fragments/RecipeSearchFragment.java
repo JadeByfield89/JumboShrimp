@@ -48,7 +48,7 @@ public class RecipeSearchFragment extends Fragment implements OnApiRequestComple
 
     private OnRecipesLoadedListener mOnRecipesLoadedListener;
     BigOvenDataSourceProvider mProvider;
-
+    private String mSearchTerm;
 
     public RecipeSearchFragment() {
         // Required empty public constructor
@@ -100,9 +100,9 @@ public class RecipeSearchFragment extends Fragment implements OnApiRequestComple
 
     @OnClick(R.id.bSearch)
     public void search() {
-        String mSearchTerm = mSearchField.getText().toString();
-        if (!mSearchTerm.isEmpty()) {
-            performSearch(mSearchTerm);
+        String searchTerm = mSearchField.getText().toString();
+        if (!searchTerm.isEmpty()) {
+            performSearch(searchTerm);
         }
     }
 
@@ -139,8 +139,12 @@ public class RecipeSearchFragment extends Fragment implements OnApiRequestComple
 
     }
 
+    public String getSearchTerm() {
+        return mSearchTerm;
+    }
 
     private void performSearch(String term) {
+        mSearchTerm = term;
 
         // Show progress dialog
         FragmentUtil.showProgressDialog(getActivity());

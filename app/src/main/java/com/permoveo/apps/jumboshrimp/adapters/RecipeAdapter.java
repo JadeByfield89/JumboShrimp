@@ -13,6 +13,7 @@ import com.permoveo.apps.jumboshrimp.view.WidthSquareImageView;
 import com.permoveo.apps.jumboshrimp.model.Recipe;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.ButterKnife;
@@ -27,11 +28,21 @@ public class RecipeAdapter extends BaseAdapter {
     private Context mContext;
     private LayoutInflater mInflater;
 
-    public RecipeAdapter(Context context, List<Recipe> recipes) {
-        mRecipes = recipes;
+
+    public RecipeAdapter(Context context) {
+        mRecipes = new ArrayList<Recipe>();
         mContext = context;
 
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    }
+
+    public void addRecipes(List<Recipe> recipes) {
+        mRecipes.addAll(recipes);
+        notifyDataSetChanged();
+    }
+
+    public List<Recipe> getRecipes() {
+        return mRecipes;
     }
 
     @Override
@@ -49,11 +60,11 @@ public class RecipeAdapter extends BaseAdapter {
         return position;
     }
 
-<<<<<<< HEAD
+
     static class ViewHolder {
 
         @InjectView(R.id.ivRecipePhoto)
-        public ImageView recipePhoto;
+        public WidthSquareImageView recipePhoto;
 
         @InjectView(R.id.tvRecipeName)
         public TextView recipeTitle;
@@ -61,11 +72,8 @@ public class RecipeAdapter extends BaseAdapter {
         public ViewHolder(View v) {
             ButterKnife.inject(this, v);
         }
-=======
-    private class ViewHolder{
-        private WidthSquareImageView recipePhoto;
-        private TextView recipeTitle;
->>>>>>> eac43bf28871c4a0602b1bcb16f593fadd9054de
+
+
     }
 
     @Override
@@ -76,12 +84,8 @@ public class RecipeAdapter extends BaseAdapter {
         if (convertView == null) {
 
             convertView = mInflater.inflate(R.layout.grid_item_recipe, parent, false);
-<<<<<<< HEAD
             holder = new ViewHolder(convertView);
-=======
-            holder.recipePhoto = (WidthSquareImageView) convertView.findViewById(R.id.ivRecipePhoto);
-            holder.recipeTitle = (TextView) convertView.findViewById(R.id.tvRecipeName);
->>>>>>> eac43bf28871c4a0602b1bcb16f593fadd9054de
+
 
             convertView.setTag(holder);
 

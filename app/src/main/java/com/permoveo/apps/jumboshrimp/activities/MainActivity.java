@@ -46,7 +46,7 @@ public class MainActivity extends FragmentActivity implements RecipeSearchFragme
 
         RecipeSearchResultsFragment fragment = new RecipeSearchResultsFragment();
         fragment.setResults(recipes);
-
+        fragment.setSearchTerm(mRecipeSearchFragment.getSearchTerm());
 
         FragmentUtil.replaceFragment(getSupportFragmentManager(), R.id.content_frame, fragment);
     }

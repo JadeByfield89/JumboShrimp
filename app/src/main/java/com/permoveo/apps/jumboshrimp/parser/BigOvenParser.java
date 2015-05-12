@@ -24,7 +24,6 @@ public class BigOvenParser implements  Parser {
 
     public static final String JSON_ARRAY_RESULTS = "Results";
     public static final String JSON_OBJECT_TITLE  = "Title";
-    public static final String JSON_OBJECT_IMAGE_URL_120 = "ImageURL120";
     public static final String JSON_OBJECT_IMAGE_URL = "ImageURL";
     public static final String JSON_OBJECT_RECIPE_ID = "RecipeID";
     public static final String JSON_OBJECT_DESCRIPTION = "Description";
@@ -33,6 +32,7 @@ public class BigOvenParser implements  Parser {
     public static final String JSON_OBJECT_NAME = "Name";
     public static final String JSON_OBJECT_DISPLAY_QUANTITY = "DisplayQuantity";
     public static final String JSON_OBJECT_PREPARATION_NOTES = "PreparationNotes";
+    public static final String JSON_OBJECT_UNIT = "Unit";
     private static final String TAG = "BigOvenParser";
 
     @Override
@@ -43,9 +43,6 @@ public class BigOvenParser implements  Parser {
                try {
                    String recipeTitle = object.getString(JSON_OBJECT_TITLE);
                    String recipeImageUrl = object.getString(JSON_OBJECT_IMAGE_URL);
-                   if (object.has(JSON_OBJECT_IMAGE_URL_120)) {
-                       recipeImageUrl = object.getString(JSON_OBJECT_IMAGE_URL_120);
-                   }
                    int recipeID = object.getInt(JSON_OBJECT_RECIPE_ID);
 
                    recipe = new Recipe(recipeID, recipeTitle, recipeImageUrl);
@@ -92,6 +89,9 @@ public class BigOvenParser implements  Parser {
             String displayQuantity = "";
             if (object.has(JSON_OBJECT_DISPLAY_QUANTITY)) {
                 displayQuantity = object.getString(JSON_OBJECT_DISPLAY_QUANTITY);
+                if (displayQuantity.equals("null")) {
+                    displayQuantity = "";
+                }
             }
             String preparationNotes = "";
             if (object.has(JSON_OBJECT_PREPARATION_NOTES)) {
@@ -101,10 +101,19 @@ public class BigOvenParser implements  Parser {
                 }
             }
 
+            String unit = "";
+            if (object.has(JSON_OBJECT_UNIT)) {
+                unit = object.getString(JSON_OBJECT_UNIT);
+                if (unit.equals("null")) {
+                    unit = "";
+                }
+            }
+
             ingredient = new Ingredient(null);
             ingredient.setName(name);
             ingredient.setDisplayQuantity(displayQuantity);
             ingredient.setPreparationNotes(preparationNotes);
+            ingredient.setUnit(unit);
 
         }catch(JSONException e){
             e.printStackTrace();
