@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +29,7 @@ import com.permoveo.apps.jumboshrimp.utils.FragmentUtil;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
+import web.RecipeScraper;
 
 
 public class RecipeSearchFragment extends Fragment implements OnApiRequestCompletedListener {
@@ -44,6 +46,7 @@ public class RecipeSearchFragment extends Fragment implements OnApiRequestComple
     Button mVoiceCommand;
     @InjectView(R.id.bBarCodeScan)
     Button mScanBarcode;
+
 
 
     private OnRecipesLoadedListener mOnRecipesLoadedListener;
@@ -87,10 +90,19 @@ public class RecipeSearchFragment extends Fragment implements OnApiRequestComple
 
         ButterKnife.inject(this, v);
 
+
+
+
         // Inflate the layout for this fragment
         return v;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+       Log.d(TAG, "onResume");
+    }
 
     @OnClick(R.id.bClearSearch)
     public void clearSearch() {

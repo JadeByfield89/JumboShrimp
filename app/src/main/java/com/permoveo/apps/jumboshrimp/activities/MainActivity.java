@@ -15,6 +15,8 @@ import com.permoveo.apps.jumboshrimp.utils.FragmentUtil;
 
 import java.util.List;
 
+import web.RecipeScraper;
+
 /**
  * Created by byfieldj on 4/14/15.
  */
@@ -51,5 +53,11 @@ public class MainActivity extends FragmentActivity implements RecipeSearchFragme
         FragmentUtil.replaceFragment(getSupportFragmentManager(), R.id.content_frame, fragment);
     }
 
-
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //Testing recipe parser!
+        RecipeScraper scraper = new RecipeScraper("");
+        scraper.parseHtmlToRecipe();
+    }
 }

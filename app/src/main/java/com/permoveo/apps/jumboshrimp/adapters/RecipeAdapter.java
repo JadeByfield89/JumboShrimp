@@ -49,7 +49,7 @@ public class RecipeAdapter extends BaseAdapter {
         return position;
     }
 
-<<<<<<< HEAD
+
     static class ViewHolder {
 
         @InjectView(R.id.ivRecipePhoto)
@@ -61,11 +61,7 @@ public class RecipeAdapter extends BaseAdapter {
         public ViewHolder(View v) {
             ButterKnife.inject(this, v);
         }
-=======
-    private class ViewHolder{
-        private WidthSquareImageView recipePhoto;
-        private TextView recipeTitle;
->>>>>>> eac43bf28871c4a0602b1bcb16f593fadd9054de
+
     }
 
     @Override
@@ -76,12 +72,8 @@ public class RecipeAdapter extends BaseAdapter {
         if (convertView == null) {
 
             convertView = mInflater.inflate(R.layout.grid_item_recipe, parent, false);
-<<<<<<< HEAD
             holder = new ViewHolder(convertView);
-=======
-            holder.recipePhoto = (WidthSquareImageView) convertView.findViewById(R.id.ivRecipePhoto);
-            holder.recipeTitle = (TextView) convertView.findViewById(R.id.tvRecipeName);
->>>>>>> eac43bf28871c4a0602b1bcb16f593fadd9054de
+
 
             convertView.setTag(holder);
 
