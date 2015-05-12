@@ -99,7 +99,6 @@
     <orderEntry type="library" exported="" name="butterknife-5.1.1" level="project" />
     <orderEntry type="library" exported="" name="zxing-android-embedded-2.3.0" level="project" />
     <orderEntry type="library" exported="" name="jsoup-1.8.2" level="project" />
-
   </component>
 </module>
 

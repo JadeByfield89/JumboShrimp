@@ -68,12 +68,19 @@ public class RecipeScraperTask extends AsyncTask<String, Void, Recipe> {
                     String tagName = nextElement.tagName();
                     Log.d(TAG, "nextElement tag name: " + tagName);
 
-                    //Check if the sibling is a <div> tag
-                    if(tagName.contains(DIV_TAG)){
+                    //Check if the first sibling is a <div> tag
+                    if(DIV_TAG.contains(tagName) || DIV_TAG.equals(tagName)){
                         Log.d(TAG, "Sibling element is of type DIV");
 
                         Element divSibling = nextElement.nextElementSibling();
                         String divSiblingName = divSibling.tagName();
+
+
+                        Elements divChildren = divSibling.getAllElements();
+                        Log.d(TAG, "Div children contains " + divChildren.size() + " elements!");
+
+
+                        //TODO://Get all <dl> tags under this div(if any)
 
 
                         //Need to dig deeper for ingredients list
