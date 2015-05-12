@@ -139,9 +139,13 @@ public class RecipeDetailFragment extends Fragment implements OnApiRequestComple
                 String name = ingredient.getName();
                 String displayQuantity = ingredient.getDisplayQuantity();
                 String preparationNotes = ingredient.getPreparationNotes();
+                String unit = ingredient.getUnit();
 
-                if (!ingredient.getDisplayQuantity().isEmpty()) {
+                if (!displayQuantity.isEmpty()) {
                     ingredientsText += displayQuantity + " ";
+                }
+                if (!unit.isEmpty()) {
+                    ingredientsText += unit + " ";
                 }
                 ingredientsText += name;
                 if (!preparationNotes.isEmpty()) {

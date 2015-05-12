@@ -32,6 +32,7 @@ public class BigOvenParser implements  Parser {
     public static final String JSON_OBJECT_NAME = "Name";
     public static final String JSON_OBJECT_DISPLAY_QUANTITY = "DisplayQuantity";
     public static final String JSON_OBJECT_PREPARATION_NOTES = "PreparationNotes";
+    public static final String JSON_OBJECT_UNIT = "Unit";
     private static final String TAG = "BigOvenParser";
 
     @Override
@@ -88,6 +89,9 @@ public class BigOvenParser implements  Parser {
             String displayQuantity = "";
             if (object.has(JSON_OBJECT_DISPLAY_QUANTITY)) {
                 displayQuantity = object.getString(JSON_OBJECT_DISPLAY_QUANTITY);
+                if (displayQuantity.equals("null")) {
+                    displayQuantity = "";
+                }
             }
             String preparationNotes = "";
             if (object.has(JSON_OBJECT_PREPARATION_NOTES)) {
@@ -97,10 +101,19 @@ public class BigOvenParser implements  Parser {
                 }
             }
 
+            String unit = "";
+            if (object.has(JSON_OBJECT_UNIT)) {
+                unit = object.getString(JSON_OBJECT_UNIT);
+                if (unit.equals("null")) {
+                    unit = "";
+                }
+            }
+
             ingredient = new Ingredient(null);
             ingredient.setName(name);
             ingredient.setDisplayQuantity(displayQuantity);
             ingredient.setPreparationNotes(preparationNotes);
+            ingredient.setUnit(unit);
 
         }catch(JSONException e){
             e.printStackTrace();

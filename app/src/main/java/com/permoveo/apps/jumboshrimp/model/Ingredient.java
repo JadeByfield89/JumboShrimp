@@ -14,6 +14,7 @@ public class Ingredient extends BaseItem implements Serializable{
     private String mName;
     private String mDisplayQuantity;
     private String mPreparationNotes;
+    private String mUnit;
 
     public Ingredient(Recipe recipe){
         mRecipe = recipe;
@@ -49,5 +50,13 @@ public class Ingredient extends BaseItem implements Serializable{
 
     public String getPreparationNotes() {
         return mPreparationNotes;
+    }
+
+    public void setUnit(String unit) {
+        mUnit = unit;
+    }
+
+    public String getUnit() {
+        return mUnit;
     }
 }
