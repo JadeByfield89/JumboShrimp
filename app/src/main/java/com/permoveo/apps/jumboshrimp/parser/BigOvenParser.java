@@ -24,7 +24,6 @@ public class BigOvenParser implements  Parser {
 
     public static final String JSON_ARRAY_RESULTS = "Results";
     public static final String JSON_OBJECT_TITLE  = "Title";
-    public static final String JSON_OBJECT_IMAGE_URL_120 = "ImageURL120";
     public static final String JSON_OBJECT_IMAGE_URL = "ImageURL";
     public static final String JSON_OBJECT_RECIPE_ID = "RecipeID";
     public static final String JSON_OBJECT_DESCRIPTION = "Description";
@@ -43,9 +42,6 @@ public class BigOvenParser implements  Parser {
                try {
                    String recipeTitle = object.getString(JSON_OBJECT_TITLE);
                    String recipeImageUrl = object.getString(JSON_OBJECT_IMAGE_URL);
-                   if (object.has(JSON_OBJECT_IMAGE_URL_120)) {
-                       recipeImageUrl = object.getString(JSON_OBJECT_IMAGE_URL_120);
-                   }
                    int recipeID = object.getInt(JSON_OBJECT_RECIPE_ID);
 
                    recipe = new Recipe(recipeID, recipeTitle, recipeImageUrl);
