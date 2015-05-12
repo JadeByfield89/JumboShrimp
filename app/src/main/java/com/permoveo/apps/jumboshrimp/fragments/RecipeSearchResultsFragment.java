@@ -62,6 +62,7 @@ public class RecipeSearchResultsFragment extends Fragment implements AdapterView
         mRecipesGrid.setOnScrollListener(this);
         mRecipesGrid.setOnItemClickListener(this);
         mRecipeAdapter.addRecipes(mRecipes);
+        currentPage = 1;
         if (mRecipes == null || mRecipes.size() < BigOvenDataSourceProvider.RESULTS_PER_PAGE) {
             enableLoadMore = false;
         }
