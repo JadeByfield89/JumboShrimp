@@ -1,6 +1,7 @@
 package com.permoveo.apps.jumboshrimp.providers;
 
 import android.content.Context;
+import android.database.CursorIndexOutOfBoundsException;
 import android.util.Log;
 
 import com.android.volley.AuthFailureError;
@@ -48,7 +49,7 @@ public class BigOvenDataSourceProvider extends DataSourceProvider {
 
     private JSONObject mResult;
     private List<String> mUrlParams;
-    private static final int RESULTS_PER_PAGE = 25;
+    public static final int RESULTS_PER_PAGE = 24;
     private int CURRENT_PAGE = 1;
     private boolean mSearchByTitle;
     private Recipe mRecipe;
@@ -268,5 +269,9 @@ public class BigOvenDataSourceProvider extends DataSourceProvider {
 
     public Recipe getRecipe() {
         return mRecipe;
+    }
+
+    public void setCurrentPage(int currentPage) {
+        CURRENT_PAGE = currentPage;
     }
 }

@@ -13,6 +13,7 @@ import com.permoveo.apps.jumboshrimp.view.WidthSquareImageView;
 import com.permoveo.apps.jumboshrimp.model.Recipe;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -24,11 +25,20 @@ public class RecipeAdapter extends BaseAdapter {
     private Context mContext;
     private LayoutInflater mInflater;
 
-    public RecipeAdapter(Context context, List<Recipe> recipes){
-        mRecipes = recipes;
+    public RecipeAdapter(Context context){
+        mRecipes = new ArrayList<Recipe>();
         mContext = context;
 
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    }
+
+    public void addRecipes(List<Recipe> recipes) {
+        mRecipes.addAll(recipes);
+        notifyDataSetChanged();
+    }
+
+    public List<Recipe> getRecipes() {
+        return mRecipes;
     }
 
     @Override
