@@ -1,4 +1,4 @@
-package web.task;
+package com.permoveo.apps.jumboshrimp.web.task;
 
 import android.os.AsyncTask;
 import android.util.Log;
@@ -8,7 +8,6 @@ import com.permoveo.apps.jumboshrimp.model.Recipe;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.jsoup.nodes.Node;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
@@ -57,7 +56,7 @@ public class RecipeScraperTask extends AsyncTask<String, Void, Recipe> {
                 String headerText = e.text();
                 //Log.d(TAG, "Header: " + headerText);
 
-                //Look specifically for the ingredients element and get it's children
+                //Look specifically for the ingredients element and get its children
                 if (headerText.equalsIgnoreCase(mElementsIngredients[0]) || headerText.contains(mElementsIngredients[0])) {
                     Log.d(TAG, "Ingredients element found! -> " + headerText);
 

@@ -1,9 +1,9 @@
-package web;
+package com.permoveo.apps.jumboshrimp.web;
 
 import android.content.Context;
 import android.support.v4.app.FragmentActivity;
 
-import web.task.RecipeScraperTask;
+import com.permoveo.apps.jumboshrimp.web.task.RecipeScraperTask;
 
 /**
  * Created by byfieldj on 5/12/15.

@@ -1,8 +1,6 @@
 package com.permoveo.apps.jumboshrimp.activities;
 
 import android.os.Bundle;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 
@@ -15,7 +13,7 @@ import com.permoveo.apps.jumboshrimp.utils.FragmentUtil;
 
 import java.util.List;
 
-import web.RecipeScraper;
+import com.permoveo.apps.jumboshrimp.web.RecipeScraper;
 
 /**
  * Created by byfieldj on 4/14/15.

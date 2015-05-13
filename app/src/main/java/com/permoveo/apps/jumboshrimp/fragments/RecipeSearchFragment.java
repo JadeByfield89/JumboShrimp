@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.permoveo.apps.jumboshrimp.R;
@@ -23,13 +22,12 @@ import com.permoveo.apps.jumboshrimp.listeners.OnApiRequestCompletedListener;
 import com.permoveo.apps.jumboshrimp.listeners.OnVoiceRecognitionListener;
 import com.permoveo.apps.jumboshrimp.model.Recipe;
 import com.permoveo.apps.jumboshrimp.providers.BigOvenDataSourceProvider;
-import com.permoveo.apps.jumboshrimp.providers.FatSecretDataSourceProvider;
 import com.permoveo.apps.jumboshrimp.utils.FragmentUtil;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
-import web.RecipeScraper;
+import com.permoveo.apps.jumboshrimp.web.RecipeScraper;
 
 
 public class RecipeSearchFragment extends Fragment implements OnApiRequestCompletedListener {
