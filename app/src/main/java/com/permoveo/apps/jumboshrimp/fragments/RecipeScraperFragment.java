@@ -36,6 +36,9 @@ public class RecipeScraperFragment extends Fragment {
     @InjectView(R.id.etRecipeUrl)
     EditText mRecipeUrl;
 
+    @InjectView(R.id.bGetRecipe)
+    Button mButton;
+
     public RecipeScraperFragment() {
         // Required empty public constructor
     }
