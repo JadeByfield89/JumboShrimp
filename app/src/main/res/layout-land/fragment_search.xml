@@ -60,6 +60,14 @@
             android:layout_height="wrap_content"
             android:text="@string/scan_barcode"/>
 
+        <Button
+            android:id="@+id/bRecipeScraper"
+            android:layout_below="@id/bBarCodeScan"
+            android:layout_centerHorizontal="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/recipe_scraper"/>
+
 
     </RelativeLayout>
 

@@ -3,6 +3,8 @@ package com.permoveo.apps.jumboshrimp.web;
 import android.content.Context;
 import android.support.v4.app.FragmentActivity;
 
+import com.permoveo.apps.jumboshrimp.listeners.OnApiRequestCompletedListener;
+import com.permoveo.apps.jumboshrimp.model.Recipe;
 import com.permoveo.apps.jumboshrimp.web.task.RecipeScraperTask;
 
 /**
@@ -17,6 +19,12 @@ public class RecipeScraper {
     private Context mContext;
     private FragmentActivity mFragmentActivity;
 
+    private OnApiRequestCompletedListener mListener;
+
+    public void setListener(OnApiRequestCompletedListener listener) {
+        mListener = listener;
+    }
+
     public RecipeScraper(String url){
 
         mSourceUrl = url;
@@ -26,7 +34,8 @@ public class RecipeScraper {
 
     public void parseHtmlToRecipe(){
         RecipeScraperTask task = new RecipeScraperTask();
-        task.execute("");
+        task.setListener(mListener);
+        task.execute(mSourceUrl);
     }
 
 

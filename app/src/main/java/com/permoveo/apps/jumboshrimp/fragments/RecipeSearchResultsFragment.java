@@ -109,7 +109,7 @@ public class RecipeSearchResultsFragment extends Fragment implements AdapterView
             mProvider.setCurrentPage(currentPage);
             mProvider.setListener(new OnApiRequestCompletedListener() {
                 @Override
-                public void onApiRequestSuccess() {
+                public void onApiRequestSuccess(Recipe recip) {
                     FragmentUtil.clearProgressDialog(getActivity().getSupportFragmentManager());
                     List<Recipe> recipes = mProvider.getRecipes();
                     if (recipes == null ||recipes.size() < BigOvenDataSourceProvider.RESULTS_PER_PAGE) {

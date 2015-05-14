@@ -145,8 +145,12 @@ public class RecipeSearchFragment extends Fragment implements OnApiRequestComple
 
         //Intent scan = new Intent(getActivity(), ActivityBarcodeScan.class);
         //startActivity(scan);
+    }
 
-
+    @OnClick(R.id.bRecipeScraper)
+    public void recipeScraper() {
+        RecipeScraperFragment fragment = new RecipeScraperFragment();
+        FragmentUtil.replaceFragment(getActivity().getSupportFragmentManager(), R.id.content_frame, fragment);
     }
 
     public String getSearchTerm() {
@@ -174,7 +178,7 @@ public class RecipeSearchFragment extends Fragment implements OnApiRequestComple
     }
 
     @Override
-    public void onApiRequestSuccess() {
+    public void onApiRequestSuccess(Recipe recipe) {
 
         // Clear progress dialog
         FragmentUtil.clearProgressDialog(getActivity());

@@ -18,6 +18,10 @@ public class Ingredient extends BaseItem implements Serializable{
 
     public Ingredient(Recipe recipe){
         mRecipe = recipe;
+        mName = "";
+        mDisplayQuantity = "";
+        mPreparationNotes = "";
+        mUnit = "";
     }
 
     public void setPhoto(Photo photo){

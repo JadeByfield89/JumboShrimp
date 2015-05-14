@@ -86,7 +86,12 @@ public class RecipeDetailFragment extends Fragment implements OnApiRequestComple
         ButterKnife.inject(this, v);
 
         displayRecipeBasicInfo();
-        getRecipe();
+        if (mRecipe.getDescription().isEmpty()) {
+            getRecipe();
+        } else {
+            displayRecipeDetails();
+        }
+
         return v;
     }
 
@@ -112,7 +117,9 @@ public class RecipeDetailFragment extends Fragment implements OnApiRequestComple
     }
 
     private void displayRecipeBasicInfo() {
-        Picasso.with(getActivity()).load(mRecipe.getRecipePhotoUrl()).into(mRecipePhoto);
+        if (!mRecipe.getRecipePhotoUrl().isEmpty()) {
+            Picasso.with(getActivity()).load(mRecipe.getRecipePhotoUrl()).into(mRecipePhoto);
+        }
         mRecipeTitle.setText(mRecipe.getRecipeName());
     }
 
@@ -158,7 +165,7 @@ public class RecipeDetailFragment extends Fragment implements OnApiRequestComple
     }
 
     @Override
-    public void onApiRequestSuccess() {
+    public void onApiRequestSuccess(Recipe recipe) {
 
         // Clear progress dialog
         FragmentUtil.clearProgressDialog(getActivity());

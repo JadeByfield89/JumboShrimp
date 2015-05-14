@@ -54,8 +54,5 @@ public class MainActivity extends FragmentActivity implements RecipeSearchFragme
     @Override
     protected void onResume() {
         super.onResume();
-        //Testing recipe parser!
-        RecipeScraper scraper = new RecipeScraper("");
-        scraper.parseHtmlToRecipe();
     }
 }

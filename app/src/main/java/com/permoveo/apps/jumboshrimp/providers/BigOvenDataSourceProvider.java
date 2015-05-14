@@ -74,7 +74,7 @@ public class BigOvenDataSourceProvider extends DataSourceProvider {
 
                 parseObjectToRecipe(response);
                 Log.d(TAG, "onResponse: Response -> " + response.toString());
-                mListener.onApiRequestSuccess();
+                mListener.onApiRequestSuccess(mRecipe);
             }
 
 
@@ -125,7 +125,7 @@ public class BigOvenDataSourceProvider extends DataSourceProvider {
 
                 parseObjectToList(response);
                 Log.d(TAG, "onResponse: Response -> " + response.toString());
-                mListener.onApiRequestSuccess();
+                mListener.onApiRequestSuccess(mRecipe);
             }
 
 
