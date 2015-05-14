@@ -3,6 +3,8 @@ package com.permoveo.apps.jumboshrimp.web.task;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.permoveo.apps.jumboshrimp.listeners.OnApiRequestCompletedListener;
+import com.permoveo.apps.jumboshrimp.model.Ingredient;
 import com.permoveo.apps.jumboshrimp.model.Recipe;
 
 import org.jsoup.Jsoup;
@@ -27,24 +29,33 @@ public class RecipeScraperTask extends AsyncTask<String, Void, Recipe> {
     private static final String[] HEADER_TAGS = {"h0", "h1", "h2", "h3", "h4", "h5", "h6"};
 
     private static final String TAG = RecipeScraperTask.class.getSimpleName();
+    public OnApiRequestCompletedListener mListener;
+
+
+    public void setListener(OnApiRequestCompletedListener listener) {
+        mListener = listener;
+    }
 
     @Override
     protected Recipe doInBackground(String... params) {
 
-        //String url = params[0];
-
-        String url = "http://www.bettycrocker.com/recipes/scrumptious-apple-pie/a41b6992-efb5-4b8a-998c-26d25f05e05a";
+        Recipe recipe = new Recipe();
+        String url = params[0];
 
         try {
             Document page = Jsoup.connect(url).get();
 
             //Get the document title
             String title = page.title();
+            recipe.setRecipeName(title);
             Log.d(TAG, "Page Title: " + title);
 
 
             //Get the 'title' meta tag
             Elements metaTitle = page.select("meta[name=title]");
+            if (title == null || title.isEmpty()) {
+                recipe.setRecipeName(metaTitle.text());
+            }
             Log.d(TAG, "Meta Title: " + metaTitle.text());
 
 
@@ -117,6 +128,9 @@ public class RecipeScraperTask extends AsyncTask<String, Void, Recipe> {
                     Log.d(TAG, "nextElement text: " + nextElement.text());
                     Log.d(TAG, "nextElement html: " + nextElement.html());
 
+                    Ingredient ingredient = new Ingredient(recipe);
+                    ingredient.setName(nextElement.text());
+                    recipe.getIngredients().add(ingredient);
 
                     //Get the child count of the Ingredients element
                     //Log.d(TAG, "Ingredients element contains: " + e.g + " children");
@@ -137,22 +151,31 @@ public class RecipeScraperTask extends AsyncTask<String, Void, Recipe> {
 
                         //Get the child count of the Directions element
                         //Log.d(TAG, "Directions element contains: " + e.childNodeSize() + " children");
-
+                        recipe.setInstructions(nextElement.text());
                     }
                 }
 
             }
 
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
+            recipe = null;
         }
-        return null;
+        return recipe;
     }
 
 
     @Override
     protected void onPostExecute(Recipe recipe) {
         super.onPostExecute(recipe);
+
+        if (mListener != null) {
+            if (recipe == null) {
+                mListener.onApiRequestError();
+            } else {
+                mListener.onApiRequestSuccess(recipe);
+            }
+        }
     }
 }

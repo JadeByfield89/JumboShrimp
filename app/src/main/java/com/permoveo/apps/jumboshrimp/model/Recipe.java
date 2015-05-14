@@ -3,6 +3,7 @@ package com.permoveo.apps.jumboshrimp.model;
 import org.json.JSONObject;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,6 +21,14 @@ public class Recipe extends BaseItem implements Serializable{
     private String mDescription;
     private String mInstructions;
 
+    public Recipe() {
+        mRecipeID = 0;
+        mRecipeName = "";
+        mPhotoUrl = "";
+        mDescription = "";
+        mInstructions = "";
+        mIngredients = new ArrayList<Ingredient>();
+    }
 
     public Recipe(int recipeID, String name, String photoUrl){
         mRecipeID = recipeID;
