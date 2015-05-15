@@ -4,15 +4,21 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 
+import com.j256.ormlite.dao.Dao;
 import com.permoveo.apps.jumboshrimp.R;
 
+import com.permoveo.apps.jumboshrimp.database.GroceryDatabaseHelper;
 import com.permoveo.apps.jumboshrimp.fragments.RecipeSearchFragment;
 import com.permoveo.apps.jumboshrimp.fragments.RecipeSearchResultsFragment;
+import com.permoveo.apps.jumboshrimp.model.GroceryItem;
 import com.permoveo.apps.jumboshrimp.model.Recipe;
 import com.permoveo.apps.jumboshrimp.utils.FragmentUtil;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 
+import com.permoveo.apps.jumboshrimp.utils.GroceryListManager;
 import com.permoveo.apps.jumboshrimp.web.RecipeScraper;
 
 /**
@@ -36,6 +42,8 @@ public class MainActivity extends FragmentActivity implements RecipeSearchFragme
         FragmentUtil.addFragmentToLayout(this, R.id.content_frame, getSupportFragmentManager(),
                 mRecipeSearchFragment, RecipeSearchFragment.TAG);
 
+
+
         Log.d("MainActivity", "onCreate");
     }
 
@@ -53,6 +61,17 @@ public class MainActivity extends FragmentActivity implements RecipeSearchFragme
 
     @Override
     protected void onResume() {
+
         super.onResume();
+
+        //Testing ORMlITE
+        GroceryDatabaseHelper helper = new GroceryDatabaseHelper(this);
+        try {
+            Dao<GroceryItem, Integer> groceryDao = helper.getDao();
+            Log.d("MainActivity", "Grocery List-> " + groceryDao.queryForAll());
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+
     }
 }
