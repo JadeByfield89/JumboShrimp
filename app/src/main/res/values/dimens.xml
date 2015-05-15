@@ -2,8 +2,12 @@
 <resources>
 
 
-<dimen name="grid_item_recipe_title">18sp</dimen>
+    <dimen name="grid_item_recipe_title">18sp</dimen>
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
+
+
+    <!--Grocery List -->
+    <dimen name = "grocery_item_name">18sp</dimen>
 </resources>

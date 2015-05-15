@@ -2,6 +2,7 @@ package com.permoveo.apps.jumboshrimp.fragments;
 
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -18,6 +19,7 @@ import com.permoveo.apps.jumboshrimp.R;
 
 import java.util.List;
 
+import com.permoveo.apps.jumboshrimp.activities.GroceryListActivity;
 import com.permoveo.apps.jumboshrimp.listeners.OnApiRequestCompletedListener;
 import com.permoveo.apps.jumboshrimp.listeners.OnVoiceRecognitionListener;
 import com.permoveo.apps.jumboshrimp.model.Recipe;
@@ -44,6 +46,8 @@ public class RecipeSearchFragment extends Fragment implements OnApiRequestComple
     Button mVoiceCommand;
     @InjectView(R.id.bBarCodeScan)
     Button mScanBarcode;
+
+
 
 
 
@@ -151,6 +155,12 @@ public class RecipeSearchFragment extends Fragment implements OnApiRequestComple
     public void recipeScraper() {
         RecipeScraperFragment fragment = new RecipeScraperFragment();
         FragmentUtil.replaceFragment(getActivity().getSupportFragmentManager(), R.id.content_frame, fragment);
+    }
+
+    @OnClick(R.id.bGroceryList)
+    public void startGroceryListActivity(){
+        Intent i = new Intent(getActivity(), GroceryListActivity.class);
+        startActivity(i);
     }
 
     public String getSearchTerm() {

@@ -7,6 +7,7 @@ import android.util.Log;
 import com.j256.ormlite.dao.Dao;
 import com.permoveo.apps.jumboshrimp.R;
 
+import com.permoveo.apps.jumboshrimp.activities.base.BaseDrawerActivity;
 import com.permoveo.apps.jumboshrimp.database.GroceryDatabaseHelper;
 import com.permoveo.apps.jumboshrimp.fragments.RecipeSearchFragment;
 import com.permoveo.apps.jumboshrimp.fragments.RecipeSearchResultsFragment;
@@ -24,14 +25,14 @@ import com.permoveo.apps.jumboshrimp.web.RecipeScraper;
 /**
  * Created by byfieldj on 4/14/15.
  */
-public class MainActivity extends FragmentActivity implements RecipeSearchFragment.OnRecipesLoadedListener {
+public class MainActivity extends BaseDrawerActivity implements RecipeSearchFragment.OnRecipesLoadedListener {
 
     private RecipeSearchFragment mRecipeSearchFragment;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        //setContentView(R.layout.activity_main);
 
 
         mRecipeSearchFragment = new RecipeSearchFragment();

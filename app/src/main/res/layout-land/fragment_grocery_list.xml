@@ -1,0 +1,50 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/fragment_grocery_list_container"
+    tools:context="com.permoveo.apps.jumboshrimp.fragments.GroceryListFragment">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/rlListContainer"
+
+
+        >
+
+
+        <Button
+            android:id="@+id/bAdd"
+            android:layout_alignParentLeft="true"
+            android:padding="5dp"
+            android:text="@string/button_add"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"></Button>
+
+        <Button
+            android:id="@+id/bUpdate"
+            android:padding="5dp"
+            android:layout_centerHorizontal="true"
+            android:text="@string/button_update"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"></Button>
+
+        <Button
+            android:id="@+id/bDelete"
+            android:padding="5dp"
+            android:layout_alignParentRight="true"
+            android:text="@string/button_delete"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"></Button>
+
+
+        <ListView
+            android:id="@+id/lvGroceryList"
+            android:layout_below="@id/bAdd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"></ListView>
+
+
+    </RelativeLayout>
+</FrameLayout>

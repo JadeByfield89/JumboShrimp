@@ -30,7 +30,7 @@ public class GroceryDatabaseHelper extends OrmLiteSqliteOpenHelper {
     private static final String DATABASE_NAME = "grocerylist.db";
 
     // any time you make changes to your database objects, you may have to increase the database version
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     public GroceryDatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -57,9 +57,48 @@ public class GroceryDatabaseHelper extends OrmLiteSqliteOpenHelper {
         long millis = System.currentTimeMillis();
         // create some entries in the onCreate
         GroceryItem simple = new GroceryItem("Apple");
+        simple.setQuantity(2);
+        simple.setPrice(2.99);
         dao.create(simple);
+
+
         simple = new GroceryItem("Orange");
+        simple.setQuantity(1);
+        simple.setPrice(1.99);
         dao.create(simple);
+
+
+
+        simple = new GroceryItem("Kiwi");
+        simple.setQuantity(4);
+        simple.setPrice(.99);
+        dao.create(simple);
+
+
+        simple = new GroceryItem("Pineapple");
+        simple.setQuantity(1);
+        simple.setPrice(.94);
+        dao.create(simple);
+
+
+
+        simple = new GroceryItem("Strawberries");
+        simple.setQuantity(4);
+        simple.setPrice(2.99);
+        dao.create(simple);
+
+
+        simple = new GroceryItem("Canteloupe");
+        simple.setQuantity(7);
+        simple.setPrice(5.99);
+        dao.create(simple);
+
+        simple = new GroceryItem("Mango");
+        simple.setQuantity(6);
+        simple.setPrice(3.99);
+        dao.create(simple);
+
+
         Log.i(GroceryDatabaseHelper.class.getName(), "created new entries in onCreate: " + millis);
 
 

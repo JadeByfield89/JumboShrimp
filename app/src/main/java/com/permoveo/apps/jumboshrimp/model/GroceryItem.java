@@ -43,10 +43,17 @@ public class GroceryItem extends BaseItem implements Serializable {
         mItemName = name;
     }
 
-    public GroceryItem(){
+    public GroceryItem() {
 
     }
 
+    public void setItemName(String name) {
+        mItemName = name;
+    }
+
+    public String getItemName() {
+        return mItemName;
+    }
 
     public void setQuantity(int quant) {
         mQuantity = quant;
@@ -72,27 +79,27 @@ public class GroceryItem extends BaseItem implements Serializable {
         return mDateModified;
     }
 
-    public void setUPCCode(String upc){
+    public void setUPCCode(String upc) {
         mUPCCode = upc;
     }
 
-    public String getUPCCode(){
+    public String getUPCCode() {
         return mUPCCode;
     }
 
-    public void setImageUrl(String url){
+    public void setImageUrl(String url) {
         mImageUrl = url;
     }
 
-    public String getImageUrl(){
+    public String getImageUrl() {
         return mImageUrl;
     }
 
-    public void setPrice(double price){
+    public void setPrice(double price) {
         mPrice = price;
     }
 
-    public double getPrice(){
+    public double getPrice() {
         return mPrice;
     }
 
